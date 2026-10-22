@@ -1,0 +1,1763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- flow-rebuild template (Growth Audit, v3: + walkthrough video, phone view/QR, localization, paywall today vs proposed). Replace every double-brace placeholder, everything between
+     the SCREENS markers, and the CONTENT json. Rules that brand-check.py enforces are marked RULE.
+     Reference builds: eddieatadapty.github.io/datacamp-flow-rebuild-v2 · bterzic123.github.io/planner5d-flow-rebuild-v2 -->
+<title>Life Reset Growth Audit</title>
+<meta name="description" content="Five ideas to turn more Life Reset users into subscribers, each built into a clickable version of Life Reset's own onboarding. Prepared by Adapty.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- the APP's font (brand.json fonts, or the closest Google family) + a mono if the app shows code -->
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* BRAND:START — the only place the APP's colours are written as literals. Every value is sampled off Life Reset's
+   recorded iOS screens (brand.json "sampled") or its site. Used only inside the phone. */
+:root{
+  --b-primary:#f15606;        /* orange CTA, quiz + rating */
+  --b-primary-ink:#ffffff;
+  --b-bg:#171717;             /* quiz background */
+  --b-night:#120e05;          /* warm black: character, before/after */
+  --b-surface:#323232;        /* quiz answer rows */
+  --b-surface2:#1d1d1d;       /* task rows, rating screen */
+  --b-ink:#ffffff;
+  --b-ink2:#a6a6a6;
+  --b-line:#525252;
+  --b-mute:#b9b2ba;           /* Restore / close / legal on the paywall */
+  --b-accent2:#7d17b7;        /* purple end of the paywall button */
+  --b-accent3:#1e49ec;        /* blue end of the paywall button */
+  --b-plum:#513683;           /* unselected plan card */
+  --b-grad:linear-gradient(180deg,#1d0d28 0%,#35186d 60%,#200731 100%);   /* main paywall */
+  --b-violet:linear-gradient(180deg,#260b38 0%,#1c0627 45%,#0d0512 100%); /* program outcome, lock-in, offer */
+  --b-cta2:linear-gradient(90deg,#7d17b7,#1e49ec);                          /* "Kickstart My Journey" */
+  --b-offer:linear-gradient(180deg,#7025c0,#443ee0);                        /* offer card */
+  --b-radius:8px;
+  --b-card:16px;
+  --b-pill:8px;
+  --b-font:'Lexend',-apple-system,system-ui,sans-serif;
+  --b-mono:ui-monospace,monospace;
+}
+/* BRAND:END */
+/* A second app family (e.g. a mono for code) is applied HERE, never in SCREENS css (brand-check allows only
+   var(--b-font) there). Prefix with .scr so it beats the screens' font shorthands, e.g.:
+   .scr .code,.scr .instr code{font-family:var(--b-mono)} */
+
+/* ================= the audit page — Adapty's, not the app's. Light, Apple-style. ================= */
+:root{
+  color-scheme:light;
+  --st-ground:#f5f5f7; --st-card:#ffffff; --st-ink:#1d1d1f; --st-ink2:#6e6e73; --st-ink3:#86868b;
+  --st-hair:rgba(0,0,0,.09); --st-link:#0066cc;
+  --st-accent:#120e05;      /* dark brand colour of the APP: buttons, the outcome band */
+  --st-hi:#f15606;          /* bright brand colour of the APP: outcome numbers on the band, idea dots */
+  --st-mark:rgba(241,86,6,.42); /* --st-hi at ~.5 alpha: the highlighter under impact numbers */
+  --st-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+html,body{margin:0}
+body{background:var(--st-ground);color:var(--st-ink);font-family:var(--st-font);-webkit-font-smoothing:antialiased;font-size:17px;line-height:1.47}
+.au-wrap{max-width:1080px;margin:0 auto;padding-inline:22px}
+a{color:var(--st-link)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--st-link);outline-offset:3px;border-radius:6px}
+mark{background:linear-gradient(transparent 62%,var(--st-mark) 62%,var(--st-mark) 92%,transparent 92%);color:inherit;padding:0 .04em}
+
+/* nav */
+.au-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(245,245,247,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--st-hair)}
+.au-nav-in{max-width:1080px;margin:0 auto;padding-inline:22px;height:52px;display:flex;align-items:center;gap:26px}
+.au-brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.au-brand img{width:26px;height:26px;border-radius:7px;flex:none}
+.au-brand span{font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.au-brand small{font-size:15px;font-weight:400;color:var(--st-ink2)}
+.au-nav a{font-size:13px;color:var(--st-ink);text-decoration:none;opacity:.82}
+.au-nav a:hover{opacity:1}
+@media (max-width:560px){.au-nav a.au-opt{display:none}.au-brand small{display:none}}
+
+/* hero */
+.au-top-hero{text-align:center;padding-top:clamp(56px,9vw,96px);overflow:hidden;position:relative}
+.au-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--st-ink);margin:0 0 14px}
+.au-eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-display{font-size:clamp(60px,12vw,120px);line-height:.98;font-weight:700;letter-spacing:-.05em;margin:0}
+.au-lede{font-size:clamp(23px,3.4vw,34px);line-height:1.16;font-weight:600;letter-spacing:-.022em;max-width:760px;margin:22px auto 0;text-wrap:balance}
+.au-lede span{color:var(--st-ink2)}
+.au-byline{font-size:14px;color:var(--st-ink3);margin:18px 0 0}
+.au-ctas{display:flex;gap:26px;justify-content:center;align-items:center;margin-top:30px;flex-wrap:wrap}
+.au-btn{display:inline-block;background:var(--st-accent);color:#fff;border-radius:980px;padding:12px 23px;font-size:17px;font-weight:500;text-decoration:none;border:0;cursor:pointer}
+.au-btn:hover{filter:brightness(1.25)}
+.au-lnk{background:none;border:0;padding:0;color:var(--st-link);font-size:17px;text-decoration:none;cursor:pointer}
+.au-lnk::after{content:"\00a0›"}
+.au-lnk:hover{text-decoration:underline}
+.au-phones{display:flex;justify-content:center;align-items:flex-start;margin-top:clamp(40px,6vw,64px);height:clamp(300px,52vw,560px)}
+.au-hp{flex:none;border:0;padding:0;background:none;cursor:pointer;width:27%;max-width:290px;margin:0 -2.5%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.au-hp img{display:block;width:100%;height:auto;filter:drop-shadow(0 28px 50px rgba(0,0,0,.2))}
+.au-hp.au-c{width:31%;max-width:330px;z-index:2}
+.au-hp.au-l{transform:translateY(12%) rotate(-5deg)}
+.au-hp.au-r{transform:translateY(12%) rotate(5deg)}
+.au-hp.au-l:hover{transform:translateY(9%) rotate(-5deg)}.au-hp.au-r:hover{transform:translateY(9%) rotate(5deg)}.au-hp.au-c:hover{transform:translateY(-3%)}
+
+/* sections */
+.au-sec{padding-block:clamp(72px,10vw,120px)}
+.au-sec.au-white{background:var(--st-card)}
+.au-kicker{font-size:15px;font-weight:600;color:var(--st-ink2);margin:0 0 12px}
+.au-h2{font-size:clamp(34px,5.2vw,56px);line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:0;text-wrap:balance}
+.au-h2 span{color:var(--st-ink3)}
+.au-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,6vw,80px);align-items:end}
+.au-split p{margin:0;font-size:clamp(17px,1.7vw,21px);line-height:1.45;color:var(--st-ink2);letter-spacing:-.01em}
+.au-split p b{color:var(--st-ink);font-weight:600}
+.au-split p + p{margin-top:16px}
+.au-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(48px,7vw,80px);border-top:1px solid var(--st-hair)}
+.au-stat{padding:28px 20px 0 0}
+.au-stat b{display:block;font-size:clamp(40px,5.5vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.au-stat span{display:block;font-size:15px;color:var(--st-ink2);margin-top:10px;max-width:22ch}
+.au-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);margin-top:clamp(48px,7vw,72px)}
+.au-note h3{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:0 0 8px}
+.au-note p{margin:0;font-size:15.5px;line-height:1.5;color:var(--st-ink2)}
+.au-note .au-ic{width:36px;height:36px;border-radius:10px;background:var(--st-ground);display:grid;place-items:center;margin-bottom:16px}
+.au-note .au-ic svg{width:19px;height:19px;stroke:var(--st-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ideas */
+.au-ideas-h{margin-bottom:clamp(32px,5vw,48px)}
+.au-list{background:var(--st-card);border-radius:28px;padding-inline:clamp(20px,4vw,44px)}
+.au-idea{display:grid;grid-template-columns:56px 1fr 220px;gap:20px;align-items:start;padding-block:clamp(26px,3.5vw,36px);border-top:1px solid var(--st-hair)}
+.au-idea:first-child{border-top:0}
+.au-idea .au-num{font-size:15px;font-weight:600;color:var(--st-ink3);font-variant-numeric:tabular-nums;padding-top:6px}
+.au-idea h3{font-size:clamp(21px,2.4vw,26px);line-height:1.2;font-weight:600;letter-spacing:-.022em;margin:0 0 8px}
+.au-idea p{margin:0 0 12px;font-size:17px;line-height:1.5;color:var(--st-ink2);max-width:58ch}
+.au-idea p code{font:600 15px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--st-ink);background:var(--st-ground);padding:2px 7px;border-radius:6px}
+.au-idea .au-lnk{font-size:15px}
+.au-imp{text-align:right}
+.au-imp .au-v{font-size:clamp(30px,3.6vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--st-accent)}
+.au-imp .au-l{font-size:13.5px;color:var(--st-ink2);margin-top:8px}
+.au-band{margin-top:20px;background:var(--st-accent);color:#fff;border-radius:28px;padding:clamp(32px,5vw,56px);display:grid;grid-template-columns:1fr auto;gap:clamp(28px,5vw,64px);align-items:center}
+.au-band .au-k{font-size:15px;font-weight:600;color:rgba(255,255,255,.62);margin:0 0 10px}
+.au-band h3{font-size:clamp(24px,3vw,32px);line-height:1.18;font-weight:600;letter-spacing:-.022em;margin:0;text-wrap:balance}
+.au-band .au-fn{font-size:13px;line-height:1.5;color:rgba(255,255,255,.55);margin:16px 0 0;max-width:52ch}
+.au-nums{display:flex;gap:clamp(28px,4vw,48px)}
+.au-nums small{display:block;font-size:13px;color:rgba(255,255,255,.62)}
+.au-nums b{display:block;font-size:clamp(48px,6.5vw,76px);font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-hi);font-variant-numeric:tabular-nums;margin:4px 0 8px}
+.au-nums span{font-size:14px;color:rgba(255,255,255,.8)}
+.au-band .au-btn{background:var(--st-hi);color:var(--st-accent);font-weight:600;margin-top:26px}
+
+/* prototype */
+.au-proto-h{text-align:center;max-width:720px;margin:0 auto}
+.au-proto-h p{font-size:clamp(17px,1.7vw,21px);color:var(--st-ink2);margin:14px 0 0}
+.au-seg{display:flex;gap:4px;justify-content:center;margin:clamp(28px,4vw,40px) auto 0;padding:4px;background:var(--st-ground);border-radius:980px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.au-seg::-webkit-scrollbar{display:none}
+.au-chip{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--st-ink2);font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:980px;cursor:pointer;white-space:nowrap}
+.au-chip:hover{color:var(--st-ink)}
+.au-chip.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.au-chip i{font-style:normal;font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--st-hi);color:var(--st-accent)}
+.au-stage{display:grid;grid-template-columns:auto minmax(0,420px);gap:clamp(32px,6vw,72px);justify-content:center;align-items:center;margin-top:clamp(28px,4vw,44px)}
+.phone{width:390px;height:844px;border-radius:56px;padding:10px;background:#0b0d10;box-shadow:0 0 0 1.5px #3a3d42,0 40px 90px rgba(0,0,0,.25);max-width:calc(100vw - 44px)}
+.phone-in{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--b-bg)}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:9}
+.sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:4px 32px 0;font:600 15px -apple-system,system-ui,sans-serif;color:var(--b-ink);z-index:8;pointer-events:none}
+.au-pn{background:var(--st-ground);border-radius:28px;padding:clamp(26px,3.5vw,38px)}
+.au-pn-k{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--st-ink)}
+.au-pn-k i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-pn-k.au-ctx{color:var(--st-ink2)}.au-pn-k.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-pn-t{font-size:clamp(24px,2.6vw,30px);line-height:1.12;font-weight:700;letter-spacing:-.028em;margin:10px 0 14px;text-wrap:balance}
+.au-pn-h{margin:0;font-size:17px;line-height:1.55;color:var(--st-ink2)}
+.au-pn-h b{color:var(--st-ink);font-weight:600}
+.au-pn-o{margin-top:24px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-pn-o .au-lab{font-size:13px;font-weight:600;color:var(--st-ink3)}
+.au-pn-o .au-val{font-size:clamp(38px,4.4vw,50px);font-weight:700;letter-spacing:-.04em;line-height:1.05;color:var(--st-accent);margin-top:6px;font-variant-numeric:tabular-nums}
+.au-pn-o .au-sub{font-size:14px;color:var(--st-ink2);margin-top:4px}
+.au-pn-a{margin:18px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-pn-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:18px;border-top:1px solid var(--st-hair);font-size:13px;color:var(--st-ink3)}
+.au-pn-nav button{background:var(--st-card);border:0;border-radius:980px;padding:8px 15px;font-size:14px;font-weight:500;color:var(--st-ink);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.au-pn-nav button:disabled{opacity:.35;cursor:default}
+.au-hint{text-align:center;font-size:14px;color:var(--st-ink3);margin:22px 0 0}
+
+/* footer */
+.au-foot{padding-block:56px 72px;border-top:1px solid var(--st-hair)}
+.au-foot details{border-bottom:1px solid var(--st-hair);padding-bottom:18px}
+.au-foot summary{cursor:pointer;font-size:17px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.au-foot summary::-webkit-details-marker{display:none}
+.au-foot summary::after{content:"+";font-size:24px;font-weight:300;color:var(--st-ink2)}
+.au-foot details[open] summary::after{content:"−"}
+.au-srcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 48px;margin-top:18px}
+.au-srcs h4{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--st-ink3);margin:18px 0 6px}
+.au-srcs dl{margin:0}.au-srcs dt{font-size:14.5px;font-weight:600;margin-top:10px}
+.au-srcs dd{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-fine{font-size:12.5px;line-height:1.6;color:var(--st-ink3);margin:22px 0 0;max-width:80ch}
+.au-cta-line{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:36px}
+.au-cta-line p{margin:0;font-size:clamp(19px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;max-width:34ch}
+
+@media (max-width:900px){
+  .au-split,.au-band{grid-template-columns:1fr}
+  .au-notes{grid-template-columns:1fr}
+  .au-idea{grid-template-columns:40px 1fr}
+  .au-imp{grid-column:2;text-align:left;display:flex;align-items:baseline;gap:10px}
+  .au-imp .au-l{margin:0}
+  .au-imp .au-v{white-space:nowrap}
+  .au-stage{grid-template-columns:1fr;justify-items:center}
+  .au-pn{width:100%;max-width:520px}
+  .au-srcs{grid-template-columns:1fr}
+}
+@media (max-width:560px){.au-stats{grid-template-columns:1fr}.au-stat{padding:22px 0 0}.au-nums{flex-direction:column;gap:18px}}
+
+/* ================= extras (audit side): video, language, phone view + QR, paywall today vs proposed, ?tour ================= */
+[hidden]{display:none!important}
+/* the device never scrolls: off-screen slides would otherwise make it scrollable by focus / scrollIntoView */
+.phone-in,.scr{overflow:clip}
+/* hero: walkthrough link */
+.au-play::before{content:"▶";font-size:.72em;margin-right:7px;position:relative;top:-1px}
+/* video dialog */
+.au-vid{border:0;padding:0;background:transparent;max-width:min(1120px,94vw);width:100%;overflow:visible}
+.au-vid::backdrop{background:rgba(0,0,0,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.au-vid-in{background:#000;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.au-vid video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.au-vid-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 4px 0;font-size:14px}
+.au-vid-bar a{color:#fff;opacity:.85}
+.au-vid-x{background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:980px;padding:8px 16px;font-size:14px;cursor:pointer}
+/* language switch */
+.au-langrow{display:flex;justify-content:center;align-items:center;gap:12px;margin:18px 0 0;font-size:13.5px;color:var(--st-ink2);flex-wrap:wrap}
+.au-lsw{display:inline-flex;gap:2px;padding:3px;background:var(--st-ground);border-radius:980px}
+.au-lsw button{border:0;background:none;padding:6px 13px;border-radius:980px;font-size:13.5px;font-weight:500;color:var(--st-ink2);cursor:pointer;white-space:nowrap}
+.au-lsw button.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* QR card (desktop) / full-screen button (phone) */
+.au-qr{display:flex;align-items:center;gap:18px;margin:26px auto 0;max-width:500px;background:var(--st-ground);border-radius:22px;padding:14px 22px 14px 14px}
+.au-qr img{width:112px;height:112px;border-radius:12px;image-rendering:pixelated;flex:none;background:#fff}
+.au-qr b{display:block;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.au-qr p{margin:4px 0 0;font-size:14.5px;line-height:1.45;color:var(--st-ink2)}
+.au-mobw{display:none;text-align:center;margin-top:22px}
+@media (max-width:900px){.au-qr{display:none}.au-mobw{display:block}}
+/* paywall: today vs proposed */
+.au-cmp{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr) minmax(0,290px);gap:clamp(24px,4vw,52px);align-items:center;margin-top:clamp(32px,5vw,52px)}
+.au-cmp figure{margin:0;text-align:center}
+.au-cmp figure img{display:block;width:100%;height:auto;filter:drop-shadow(0 24px 44px rgba(0,0,0,.18))}
+.au-cmp figcaption{margin-top:14px;font-size:15px;font-weight:600}
+.au-cmp figcaption span{color:var(--st-ink2);font-weight:400}
+.au-cmp-go{border:0;padding:0;background:none;cursor:pointer;display:block;width:100%;transition:transform .3s}
+.au-cmp-go:hover{transform:translateY(-4px)}
+.au-chg{list-style:none;margin:0;background:var(--st-card);border-radius:24px;padding:4px clamp(18px,2.4vw,28px)}
+.au-chg li{padding:15px 0;border-top:1px solid var(--st-hair)}
+.au-chg li:first-child{border-top:0}
+.au-chg h4{margin:0 0 7px;font-size:16px;font-weight:600;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.au-chg h4 i{font-style:normal;font-size:12px;font-weight:600;color:var(--st-accent);background:var(--st-mark);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.au-was,.au-now{display:grid;grid-template-columns:78px 1fr;gap:8px;font-size:14.5px;line-height:1.42}
+.au-was{color:var(--st-ink3)}
+.au-now{color:var(--st-ink);margin-top:3px}
+.au-was em,.au-now em{font-style:normal;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.au-now em{color:var(--st-link)}
+.au-kept{margin:22px 0 0;font-size:14px;color:var(--st-ink2);text-align:center}
+@media (max-width:900px){.au-cmp{grid-template-columns:1fr 1fr;gap:18px}.au-chg{grid-column:1 / -1;order:3}.au-was,.au-now{grid-template-columns:70px 1fr}}
+
+/* ?app — the prototype full screen on a real phone, with a bar that opens the idea panel */
+html.appmode,html.appmode body{height:100%;overflow:hidden;background:#000}
+html.appmode .au-nav,html.appmode .au-top-hero,html.appmode #why,html.appmode #ideas,html.appmode #compare,html.appmode .au-foot,
+html.appmode .au-proto-h,html.appmode #prototype .au-langrow,html.appmode #chips,html.appmode .au-hint,html.appmode .au-qr,html.appmode .au-mobw{display:none!important}
+html.appmode #prototype{padding:0;background:#000}
+html.appmode #prototype .au-wrap{padding:0;max-width:none}
+html.appmode .au-stage{display:block;margin:0}
+html.appmode .phone{position:fixed;top:0;left:0;right:0;margin:0 auto;width:min(100%,480px);height:calc(100% - 56px - env(safe-area-inset-bottom,0px));max-width:none;border-radius:0;padding:0;box-shadow:none;background:#000}
+html.appmode .phone-in{border-radius:0}
+html.appmode .island,html.appmode .sbar{display:none}
+html.appmode .scr .s-pad{padding-top:max(58px,calc(env(safe-area-inset-top,0px) + 16px))}
+html.appmode .scr .s-x,html.appmode .scr .s-lang{top:max(54px,calc(env(safe-area-inset-top,0px) + 10px))}
+.au-appbar,.au-scrim{display:none}
+html.appmode .au-appbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;height:calc(56px + env(safe-area-inset-bottom,0px));padding:0 12px env(safe-area-inset-bottom,0px) 16px;align-items:center;gap:12px;background:#0b0b0c;border-top:1px solid rgba(255,255,255,.1);color:#fff}
+.au-ab-why{flex:1;min-width:0;display:flex;align-items:center;gap:9px;background:none;border:0;color:#fff;font-size:14px;font-weight:500;text-align:left;cursor:pointer;padding:0}
+.au-ab-why i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);flex:none}
+.au-ab-why span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.au-ab-why em{font-style:normal;color:rgba(255,255,255,.6);margin-left:auto;flex:none;font-size:13px}
+.au-appbar .au-lsw{background:rgba(255,255,255,.12)}
+.au-appbar .au-lsw button{color:rgba(255,255,255,.75);padding:5px 11px}
+.au-appbar .au-lsw button.on{background:#fff;color:#000}
+html.appmode #panel{position:fixed;left:0;right:0;bottom:0;z-index:80;max-width:none;width:auto;margin:0 auto;border-radius:24px 24px 0 0;max-height:78%;overflow:auto;transform:translateY(105%);transition:transform .3s cubic-bezier(.3,.7,.2,1);padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
+html.appmode.au-open #panel{transform:none}
+html.appmode.au-open .au-scrim{display:block;position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.5)}
+
+/* ?tour — 1280×720 walkthrough frames (record-video.sh renders them into assets/walkthrough.mp4) */
+.au-tour{display:none}
+html.tourmode,html.tourmode body{overflow:hidden;background:var(--st-ground)}
+html.tourmode body *{visibility:hidden}
+html.tourmode .phone,html.tourmode .phone *,html.tourmode .au-tour,html.tourmode .au-tour *{visibility:visible}
+html.tourmode .phone{position:fixed;left:170px;top:44px;margin:0;transform:scale(.755);transform-origin:0 0;box-shadow:0 0 0 1.5px #3a3d42,0 34px 80px rgba(0,0,0,.22);z-index:5;max-width:none}
+html.tourmode .au-tour{display:block;position:fixed;inset:0;z-index:6;pointer-events:none;color:var(--st-ink)}
+.au-tb{position:absolute;left:590px;top:30px;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600}
+.au-tb img{width:26px;height:26px;border-radius:7px}
+.au-tb small{font-size:16px;font-weight:400;color:var(--st-ink2)}
+.au-tby{position:absolute;right:48px;top:32px;font-size:14px;color:var(--st-ink3)}
+.au-tcap{position:absolute;left:590px;right:60px;top:50%;transform:translateY(-50%)}
+.au-tk{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600}
+.au-tk i{width:9px;height:9px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-tk.au-ctx{color:var(--st-ink2)}.au-tk.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-tt{font-size:46px;line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:14px 0 14px;text-wrap:balance}
+.au-tl{font-size:23px;line-height:1.36;color:var(--st-ink2);letter-spacing:-.01em;margin:0;max-width:28ch}
+.au-to{margin-top:28px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-to small{display:block;font-size:14px;font-weight:600;color:var(--st-ink3)}
+.au-to b{display:inline-block;font-size:62px;font-weight:700;letter-spacing:-.045em;line-height:1.08;color:var(--st-accent);margin-top:4px}
+.au-to span{display:block;font-size:16px;color:var(--st-ink2);margin-top:2px}
+.au-tprog{position:absolute;left:48px;right:48px;bottom:22px;height:4px;border-radius:3px;background:var(--st-hair);overflow:hidden}
+.au-tprog i{display:block;height:100%;background:var(--st-hi)}
+.au-ttap{position:absolute;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.5);box-shadow:0 0 0 2.5px rgba(255,255,255,.9),0 6px 16px rgba(0,0,0,.35);opacity:0}
+.au-tintro,.au-tend{position:absolute;inset:0;background:var(--st-ground);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0}
+.au-tintro .au-lede{margin-top:18px}
+.au-te-h{font-size:46px;line-height:1.08;font-weight:700;letter-spacing:-.035em;margin:0;max-width:18ch;text-wrap:balance}
+.au-te-n{display:flex;gap:64px;margin-top:30px}
+.au-te-n small{display:block;font-size:14px;color:var(--st-ink2)}
+.au-te-n b{display:block;font-size:76px;font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-accent);margin:4px 0 6px}
+.au-te-n span{font-size:15px;color:var(--st-ink2)}
+.au-te-q{display:flex;align-items:center;gap:18px;margin-top:34px;background:var(--st-card);border-radius:20px;padding:12px 24px 12px 12px;text-align:left}
+.au-te-q img{width:104px;height:104px;border-radius:10px;image-rendering:pixelated}
+.au-te-q b{display:block;font-size:18px;font-weight:600}
+.au-te-q span{display:block;font-size:15px;color:var(--st-link);margin-top:3px}
+.au-te-f{position:absolute;bottom:44px;left:0;right:0;font-size:13px;color:var(--st-ink3);margin:0}
+
+/* ---------- screen engine (layout only, no colours) ---------- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--b-bg);color:var(--b-ink);font-family:var(--b-font);
+     transform:translateX(100%);transition:transform .32s cubic-bezier(.3,.7,.2,1);overflow:hidden;text-align:left;line-height:normal;font-size:16px}
+.scr.is-active{transform:none;z-index:2}.scr.is-past{transform:translateX(-28%)}.scr.under{transform:none;z-index:1}
+.scr.sheet{transform:translateY(100%)}.scr.sheet.is-active{transform:none}
+.nofx,.nofx *{transition:none!important}
+.shot .scr{transition:none!important}
+/* ?phone — just the device at (10,10), for shoot.sh and hero-stills.sh (&clear = transparent ground) */
+.phoneonly body{background:#141615}
+.phoneonly.clear body{background:transparent}
+.phoneonly body *{visibility:hidden}
+.phoneonly .phone,.phoneonly .phone *{visibility:visible}
+.phoneonly .phone{position:fixed;top:10px;left:10px;z-index:99;box-shadow:none;max-width:none;margin:0}
+
+/* SCREENS:START — Life Reset's screens. Colours only via var(--b-*) or white/black alpha. */
+.scr{font-family:var(--b-font)}
+.s-pad{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:58px 20px 30px;min-height:0}
+.s-top{display:flex;align-items:center;gap:12px;height:28px;flex:none}
+.s-back{background:none;border:0;padding:0;color:var(--b-ink);width:24px;height:24px;cursor:pointer;flex:none;display:grid;place-items:center}
+.s-back svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.s-prog{flex:1;height:4px;border-radius:4px;background:var(--b-line);overflow:hidden}
+.s-prog i{display:block;height:100%;background:var(--b-ink);border-radius:4px}
+.s-lang{flex:none;display:inline-flex;align-items:center;gap:5px;background:var(--b-surface2);border:0;border-radius:6px;color:var(--b-ink);font:500 10.5px var(--b-font);padding:5px 8px;cursor:pointer}
+.s-lang::after{content:"";width:5px;height:5px;border-right:1.4px solid currentColor;border-bottom:1.4px solid currentColor;transform:rotate(45deg) translateY(-2px);margin-left:2px}
+.s-q{font:700 16.5px/1.35 var(--b-font);margin:22px 0 16px;letter-spacing:-.005em}
+.s-q.s-c{text-align:center}
+.s-opt{display:block;width:100%;text-align:left;background:var(--b-surface);border:1.5px solid transparent;border-radius:4px;color:var(--b-ink2);font:400 13px var(--b-font);padding:14px 14px;margin-bottom:10px;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.s-opt.on{border-color:var(--b-primary);color:var(--b-ink);background:color-mix(in srgb,var(--b-primary) 14%,var(--b-surface))}
+.s-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:var(--b-pill);background:var(--b-primary);color:var(--b-primary-ink);font:600 15px var(--b-font);padding:15px;cursor:pointer;box-shadow:0 0 0 1.5px color-mix(in srgb,var(--b-primary) 60%,white),0 0 22px color-mix(in srgb,var(--b-primary) 55%,transparent)}
+.s-cta.s-violet{background:var(--b-cta2);box-shadow:none;border-radius:10px;font-weight:700}
+.s-cta.s-white{background:var(--b-ink);color:var(--b-night);box-shadow:none;border-radius:10px;font-weight:700}
+.s-link{background:none;border:0;color:var(--b-ink2);font:400 12px var(--b-font);text-decoration:underline;cursor:pointer;padding:10px 0 0;align-self:center}
+.s-ic{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* welcome */
+.w-art{position:absolute;left:0;right:0;top:0;height:64%;background:url(assets/crop/welcome-art.png) center top/cover}
+.w-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.6) 100%)}
+.w-sheet{position:absolute;left:0;right:0;bottom:0;z-index:2;background:rgba(0,0,0,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:28px 28px 0 0;padding:26px 24px 34px;display:flex;flex-direction:column;align-items:center}
+.w-tag{font:800 30px/1 var(--b-font);letter-spacing:-.01em;text-transform:uppercase;margin:0}
+.w-tag2{font:400 13px var(--b-font);color:var(--b-ink2);margin:6px 0 18px}
+.w-row{display:flex;align-items:center;gap:22px;margin-bottom:22px}
+.w-brand{display:flex;align-items:center;gap:7px;font:700 15px var(--b-font)}
+.w-brand img{width:24px;height:24px}
+.w-laurel{display:flex;flex-direction:column;align-items:center;line-height:1;padding:0 14px;border-left:1.5px solid rgba(255,255,255,.35);border-right:1.5px solid rgba(255,255,255,.35);border-radius:40%}
+.w-laurel b{font:800 17px var(--b-font)}
+.w-laurel span{font:600 11px var(--b-font)}
+.w-laurel small{font:500 9px var(--b-font);color:var(--b-primary);letter-spacing:1px;margin-top:3px}
+
+/* character */
+.c-pair{display:flex;gap:12px;margin-top:10px;flex:1;min-height:0}
+.c-pick{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;background:none;border:0;padding:0;cursor:pointer;color:var(--b-ink)}
+.c-pick img{width:100%;height:380px;object-fit:cover;object-position:center top;border-radius:var(--b-card);opacity:.4;filter:grayscale(.5);transition:opacity .2s}
+.c-pick.on img{opacity:1;filter:none}
+.c-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--b-line);display:grid;place-items:center}
+.c-pick.on .c-dot{border-color:var(--b-ink);background:rgba(255,255,255,.12)}
+.c-dot svg{width:18px;height:18px;stroke:var(--b-ink);fill:none;stroke-width:2.4;opacity:0}
+.c-pick.on .c-dot svg{opacity:1}
+
+/* tasks */
+.t-h{font:700 21px/1.2 var(--b-font);margin:4px 0 4px}
+.t-sub{font:400 11.5px var(--b-font);color:var(--b-ink2);margin:0 0 14px}
+.t-list{display:flex;flex-direction:column;gap:7px}
+.t-item{display:flex;align-items:center;gap:12px;background:var(--b-surface2);border-radius:6px;padding:8px 12px}
+.t-item b{display:block;font:600 12.5px var(--b-font)}
+.t-item span{display:block;font:400 9.5px var(--b-font);color:var(--b-ink2);margin-top:2px}
+.t-btn2{width:100%;border:0;border-radius:var(--b-pill);background:var(--b-ink);color:var(--b-night);font:600 13px var(--b-font);padding:13px;margin:auto 0 10px;cursor:pointer}
+
+/* rating */
+.r-art{position:absolute;right:-70px;top:120px;width:300px;height:560px;background:url(assets/crop/char-f.png) center top/cover;opacity:.32;mask-image:linear-gradient(90deg,transparent,black 40%);-webkit-mask-image:linear-gradient(90deg,transparent,black 40%)}
+.r-art.r-m{background-image:url(assets/crop/char-m.png)}
+.r-h{font:700 24px/1.12 var(--b-font);margin:8px 0 18px;max-width:200px}
+.r-card{display:flex;align-items:stretch;background:rgba(0,0,0,.45);border:1px solid var(--b-line);border-radius:10px;overflow:hidden}
+.r-lvl{background:var(--b-primary);width:112px;padding:10px 0 8px;text-align:center;clip-path:polygon(0 0,100% 0,82% 100%,0 100%)}
+.r-lvl b{display:block;font:800 40px/1 var(--b-font)}
+.r-lvl > span{font:600 9px var(--b-font);letter-spacing:1px}
+.r-xp{flex:1;text-align:right;padding:12px 14px}
+.r-xp b{display:block;font:800 22px/1 var(--b-font)}
+.r-xp > span{font:400 10px var(--b-font);color:var(--b-ink2)}
+.r-bar{height:10px;margin:10px 0 4px;background:repeating-linear-gradient(90deg,var(--b-ink) 0 3px,transparent 3px 5px);opacity:.85;border-radius:2px}
+.r-bar.r-pot{background:repeating-linear-gradient(90deg,var(--b-primary) 0 3px,transparent 3px 5px);opacity:1}
+.r-next{font:400 10px var(--b-font);color:var(--b-ink2);text-align:center}
+.r-stats{margin-top:14px}
+.r-stat{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font:400 13px var(--b-font)}
+.r-stat em{font-style:normal;margin-left:auto;font:800 24px/1 var(--b-font)}
+.r-stat i{font-style:normal;font-size:10px;color:var(--b-ink2)}
+
+/* lock in (streak + hold, one commitment) */
+.l-bg{position:absolute;inset:0;background:var(--b-violet)}
+.l-art{position:absolute;left:0;right:0;bottom:0;height:52%;background:url(assets/crop/lockin-art.png) center bottom/cover;opacity:.85;mask-image:linear-gradient(180deg,transparent,black 35%);-webkit-mask-image:linear-gradient(180deg,transparent,black 35%)}
+.l-mark{width:30px;height:30px;align-self:center;margin-top:6px}
+.l-h{font:700 22px/1.2 var(--b-font);text-align:center;margin:12px 0 8px}
+.l-sub{font:400 11.5px/1.5 var(--b-font);color:var(--b-ink2);text-align:center;margin:0 6px 16px}
+.l-k{font:600 11px var(--b-font);color:var(--b-ink2);text-align:center;margin:0 0 8px;letter-spacing:.02em}
+.l-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.l-opt{background:rgba(0,0,0,.4);border:1.5px solid var(--b-line);border-radius:8px;color:var(--b-ink);text-align:left;padding:9px 11px;cursor:pointer;font-family:var(--b-font)}
+.l-opt b{display:block;font:600 12.5px var(--b-font)}
+.l-opt span{display:block;font:400 9.5px var(--b-font);color:var(--b-ink2);margin-top:2px}
+.l-opt.on{background:var(--b-primary);border-color:var(--b-primary)}
+.l-opt.on span{color:var(--b-ink)}
+.l-fp{align-self:center;margin-top:24px;width:74px;height:74px;border-radius:50%;border:2px solid rgba(255,255,255,.75);background:rgba(255,255,255,.08);display:grid;place-items:center;cursor:pointer;color:var(--b-ink);position:relative;touch-action:none;-webkit-user-select:none;user-select:none}
+.l-fp svg{width:38px;height:38px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round}
+.l-fp::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:3px solid var(--b-primary);clip-path:inset(100% 0 0 0);transition:clip-path .85s linear}
+.l-fp.hold::before{clip-path:inset(0 0 0 0)}
+.l-hint{text-align:center;font:400 11px var(--b-font);color:var(--b-ink2);margin-top:10px}
+
+/* plan (program outcome) */
+.p-bg{position:absolute;inset:0;background:var(--b-violet)}
+.p-ok{width:22px;height:22px;border-radius:50%;background:var(--b-ink);display:grid;place-items:center;align-self:center;margin-top:2px}
+.p-ok svg{width:12px;height:12px;stroke:var(--b-night);fill:none;stroke-width:3}
+.p-h{font:700 21px/1.35 var(--b-font);text-align:center;margin:16px 4px 8px}
+.p-h u{text-decoration:none;color:var(--b-primary)}
+.p-by{font:400 12.5px var(--b-font);color:var(--b-ink2);text-align:center;margin:0}
+.p-date{align-self:center;background:var(--b-ink);color:var(--b-night);font:700 14px var(--b-font);border-radius:9px;padding:9px 16px;margin:10px 0 20px;box-shadow:0 0 0 2px var(--b-accent2)}
+.p-card{display:flex;gap:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:10px;align-items:center}
+.p-card img{width:92px;height:120px;object-fit:cover;object-position:center top;border-radius:8px;flex:none}
+.p-lv{font:600 11px var(--b-font);color:var(--b-ink2);letter-spacing:.04em}
+.p-lv b{font:800 24px var(--b-font);color:var(--b-ink);letter-spacing:0}
+.p-lv b.p-to{color:var(--b-primary)}
+.p-rows{margin-top:8px;display:grid;grid-template-columns:auto auto;gap:5px 14px;font:400 12.5px var(--b-font);color:var(--b-ink2)}
+.p-rows em{font-style:normal;color:var(--b-ink);font-weight:600;text-align:right}
+.p-list{list-style:none;margin:22px 0 0;padding:0 4px;display:flex;flex-direction:column;gap:11px}
+.p-list li{display:flex;gap:10px;font:400 13px/1.4 var(--b-font)}
+.p-list svg{width:13px;height:13px;stroke:var(--b-ink);fill:none;stroke-width:2.6;flex:none;margin-top:1px}
+
+/* paywall (theirs, today and proposed) */
+.pw-bg{position:absolute;inset:0;background:var(--b-grad)}
+.pw-top{display:flex;align-items:center;justify-content:space-between;height:30px}
+.pw-top img{width:34px;height:34px}
+.pw-rs{background:none;border:0;color:var(--b-mute);font:400 12.5px var(--b-font);cursor:pointer;padding:0;width:64px;text-align:left}
+.s-x{background:none;border:0;color:var(--b-mute);cursor:pointer;padding:0;width:64px;display:flex;justify-content:flex-end}
+.s-x svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.pw-h{font:700 17.5px/1.35 var(--b-font);text-align:center;margin:14px 6px 6px}
+.pw-sub{font:400 11.5px/1.5 var(--b-font);text-align:center;color:rgba(255,255,255,.9);margin:0 4px}
+.pw-mock{display:block;width:calc(100% + 40px);margin:8px -20px 0;height:auto}
+.pw-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.pw-plan{position:relative;background:var(--b-plum);border:0;border-radius:12px;color:var(--b-ink);padding:14px 6px 12px;text-align:center;cursor:pointer;font-family:var(--b-font)}
+.pw-plan.on{background:var(--b-ink);color:var(--b-night)}
+.pw-plan small{display:block;font:600 11.5px var(--b-font);letter-spacing:.04em;opacity:.85}
+.pw-plan b{display:block;font:600 15.5px var(--b-font);margin-top:4px;white-space:nowrap}
+.pw-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--b-night);color:var(--b-ink);border:2px solid var(--b-ink);border-radius:8px;font:700 10.5px var(--b-font);padding:2px 9px;white-space:nowrap}
+.pw-notes{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center;font:400 11px var(--b-font);margin-top:6px}
+.pw-notes span:first-child{color:var(--b-mute);opacity:.7}
+.pw-notes b{font-weight:600}
+.pw-proof{margin:12px 0 10px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:9px 12px}
+.pw-stars{display:flex;align-items:center;gap:6px;font:600 11.5px var(--b-font)}
+.pw-stars i{font-style:normal;color:var(--b-primary);letter-spacing:1px;font-size:12px}
+.pw-stars span{color:var(--b-mute);font-weight:400}
+.pw-q{font:italic 600 11.5px/1.4 var(--b-font);margin:5px 0 0}
+.pw-q small{font:400 10px var(--b-font);color:var(--b-mute);font-style:normal}
+.pw-legal{display:flex;justify-content:center;gap:18px;font:400 10.5px var(--b-font);color:var(--b-mute);opacity:.7;margin-top:10px}
+.pw-bill{text-align:center;font:400 10.5px var(--b-font);color:var(--b-mute);margin-top:8px}
+
+/* offer on close */
+.o-bg{position:absolute;inset:0;background:var(--b-violet)}
+.o-x{position:absolute;top:58px;left:20px;z-index:3;background:none;border:0;color:var(--b-mute);cursor:pointer;padding:0}
+.o-x svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.o-h{font:700 20px var(--b-font);text-align:center;margin:2px 0 6px}
+.o-sub{font:400 12px/1.5 var(--b-font);text-align:center;color:var(--b-ink2);margin:0}
+.o-gift{display:block;width:168px;height:auto;border-radius:10px;align-self:center;margin:16px 0 14px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.o-card{background:var(--b-offer);border-radius:16px;padding:16px 18px;text-align:center}
+.o-pct{font:800 24px var(--b-font);margin:0}
+.o-pill{display:inline-block;background:var(--b-night);border-radius:8px;font:600 11.5px var(--b-font);padding:6px 12px;margin:8px 0 6px}
+.o-was{font:600 11.5px var(--b-font);color:rgba(255,255,255,.75);margin:0}
+.o-list{list-style:none;margin:10px 0 0;padding:0;text-align:left;display:inline-flex;flex-direction:column;gap:5px;font:500 11px var(--b-font)}
+.o-list li::before{content:"✓";margin-right:7px;opacity:.8}
+
+/* you're in (sign-up + reminders, after the purchase) */
+.d-mark{width:40px;height:40px;align-self:center;margin-top:20px}
+.d-h{font:700 23px/1.25 var(--b-font);text-align:center;margin:16px 0 8px}
+.d-sub{font:400 12px/1.5 var(--b-font);text-align:center;color:var(--b-ink2);margin:0 0 18px}
+.d-k{font:600 12px var(--b-font);margin:6px 0 8px}
+.d-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:rgba(0,0,0,.35);border:1.5px solid rgba(255,255,255,.7);border-radius:6px;color:var(--b-ink);font:500 12.5px var(--b-font);padding:11px;margin-bottom:8px;cursor:pointer}
+.d-tg{display:flex;align-items:center;gap:10px;background:var(--b-surface2);border-radius:10px;padding:10px 12px;margin-bottom:7px}
+.d-tg b{display:block;font:600 12px var(--b-font)}
+.d-tg span{display:block;font:400 9.5px var(--b-font);color:var(--b-ink2);margin-top:2px}
+.d-sw{margin-left:auto;flex:none;width:38px;height:22px;border-radius:11px;background:var(--b-accent3);position:relative}
+.d-sw::after{content:"";position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:var(--b-ink)}
+/* SCREENS:END */
+</style>
+</head>
+<body>
+
+<nav class="au-nav" aria-label="Sections">
+  <div class="au-nav-in">
+    <div class="au-brand">
+      <img src="assets/brand/appstore-icon.jpg" alt="">
+      <span>Growth Audit <small>· Life Reset</small></span>
+    </div>
+    <a class="au-opt" href="#why">Why this</a>
+    <a href="#ideas">Five ideas</a>
+    <a href="#prototype">Prototype</a>
+    <a class="au-opt" href="#compare" id="navCompare" hidden>Paywall</a>
+  </div>
+</nav>
+
+<header class="au-top-hero" id="top">
+  <div class="au-wrap">
+    <p class="au-eyebrow"><i></i>Growth Audit · October 2026</p>
+    <h1 class="au-display">Life Reset</h1>
+    <p class="au-lede">Five ideas to turn more 66-day resets into subscribers. <span>Each one built into your own onboarding, so you can tap through it.</span></p>
+    <p class="au-byline">Prepared by Adapty for the Life Reset team</p>
+    <div class="au-ctas">
+      <a class="au-btn" href="#ideas">See the five ideas</a>
+      <a class="au-lnk" href="#prototype">Open the prototype</a>
+      <button type="button" class="au-lnk au-play" id="heroVideo" hidden>Watch the 30-second walkthrough</button>
+    </div>
+  </div>
+  <!-- filled from CONTENT.hero: three screen ids → assets/hero/<id>.png (make them with hero-stills.sh) -->
+  <div class="au-phones" id="heroPhones" aria-label="Three screens from the prototype"></div>
+</header>
+
+<section class="au-sec au-white" id="why">
+  <div class="au-wrap">
+    <div class="au-split">
+      <div>
+        <p class="au-kicker">Why you’re seeing this</p>
+        <h2 class="au-h2">30,000 subscription apps taught us what moves conversion. <span>Here’s what we’d test first at Life Reset.</span></h2>
+      </div>
+      <div>
+        <p>Adapty runs subscriptions for <b>more than 30,000 apps</b>, so we see which onboarding and paywall changes lift revenue across the whole market, not just inside one app.</p>
+        <p>We pointed that at Life Reset. We took <b>your own screens, copy and prices</b> from your live iOS flow and App Store listing, and rebuilt the path from install to paywall around the five ideas with the most potential.</p>
+      </div>
+    </div>
+    <div class="au-stats">
+      <div class="au-stat"><b>30,000+</b><span>apps run their subscriptions on Adapty</span></div>
+      <div class="au-stat"><b>5</b><span>ideas, each built as a working screen</span></div>
+      <div class="au-stat"><b>0</b><span>changes to your art direction</span></div>
+    </div>
+    <div class="au-notes">
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg></div>
+        <h3>Five ideas, not fifteen</h3>
+        <p>We’re not proposing to rebuild every screen. These are the changes with the highest potential, ranked by what we’d test first.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/></svg></div>
+        <h3>Your design, not ours</h3>
+        <p>Every colour, control and price in the prototype is Life Reset’s. We changed the order and what gets shown.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13A1.5 1.5 0 0 1 5.5 4H15"/></svg></div>
+        <h3>We hope you haven’t tried these yet</h3>
+        <p>We work from the outside, so we can’t see your test history. If you’ve already run one of these, tell us and we’ll go deeper on the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec" id="ideas">
+  <div class="au-wrap">
+    <div class="au-ideas-h">
+      <p class="au-kicker">The shortlist</p>
+      <h2 class="au-h2">Five ideas. <span>Ranked by what we’d test first.</span></h2>
+    </div>
+    <div class="au-list" id="ideaList"></div>
+    <div class="au-band">
+      <div>
+        <p class="au-k">Potential outcome, based on Adapty data</p>
+        <h3>Together they work on four moments: the first screen, the payoff, the button, and what happens when someone says no.</h3>
+        <p class="au-fn" id="bandFn"></p>
+        <a class="au-btn" href="#prototype">Tap through the prototype</a>
+      </div>
+      <div class="au-nums" id="bandNums"></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec au-white" id="prototype">
+  <div class="au-wrap">
+    <div class="au-proto-h">
+      <p class="au-kicker">The prototype</p>
+      <h2 class="au-h2">Every idea, inside your own onboarding.</h2>
+      <p>Tap through it like a new user, or jump straight to an idea. Numbered chips mark the screens that carry one.</p>
+    </div>
+    <div class="au-langrow" id="langRow" hidden><span>Prototype language</span><div class="au-lsw" id="langSw" role="group" aria-label="Prototype language"></div></div>
+    <div class="au-seg" id="chips" role="tablist" aria-label="Screens"></div>
+    <div class="au-stage">
+      <div class="phone"><div class="phone-in">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+
+<!-- SCREENS:START — Life Reset: welcome → reason → character → tasks → rating → lock in → plan → paywall → offer (sheet) → you're in. today = their paywall as recorded (aside). -->
+
+<section class="scr" data-id="welcome">
+  <div class="w-art"></div>
+  <div class="w-sheet">
+    <p class="w-tag" data-t="w_tag">Become one</p>
+    <p class="w-tag2" data-t="w_tag2">with your mind and your environment</p>
+    <div class="w-row">
+      <div class="w-brand"><img src="assets/crop/mark.png" alt="">Life Reset</div>
+      <div class="w-laurel"><b>1M+</b><span data-t="w_installs">installs</span><small>★★★★★ 4.7</small></div>
+    </div>
+    <button class="s-cta" data-go="reason"><span data-t="w_cta">Start my reset</span></button>
+    <button class="s-link" data-go="done"><span data-t="w_have">I already have an account</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="reason">
+  <div class="s-pad">
+    <div class="s-top">
+      <button class="s-back" data-back aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="s-prog"><i style="width:22%"></i></div>
+      <button class="s-lang" data-langtoggle><span data-t="lang">🇺🇸 English</span></button>
+    </div>
+    <h1 class="s-q" data-t="r_q">What is the biggest reason you want to reset your life?</h1>
+    <button class="s-opt" data-pick="goal:motivation" data-advance="character"><span data-t="r_o1">Lack motivation and discipline</span></button>
+    <button class="s-opt" data-pick="goal:career" data-advance="character"><span data-t="r_o2">Improve my study and career</span></button>
+    <button class="s-opt" data-pick="goal:quit" data-advance="character"><span data-t="r_o3">Quit porn addiction and improve life</span></button>
+    <button class="s-opt" data-pick="goal:fit" data-advance="character"><span data-t="r_o4">Build muscle and get fit</span></button>
+    <button class="s-opt" data-pick="goal:setback" data-advance="character"><span data-t="r_o5">Overcome major life setbacks</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="character">
+  <div class="s-pad">
+    <div class="s-top">
+      <button class="s-back" data-back aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="s-prog"><i style="width:30%"></i></div>
+      <button class="s-lang" data-langtoggle><span data-t="lang">🇺🇸 English</span></button>
+    </div>
+    <h1 class="s-q s-c" data-t="c_q">Choose your character</h1>
+    <div class="c-pair">
+      <button class="c-pick" data-pick="char:f"><img src="assets/crop/char-f.png" alt=""><span class="c-dot"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></button>
+      <button class="c-pick" data-pick="char:m"><img src="assets/crop/char-m.png" alt=""><span class="c-dot"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></button>
+    </div>
+    <button class="s-cta" data-go="tasks" style="margin-top:18px"><span data-t="continue">Continue</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="tasks">
+  <div class="s-pad">
+    <h1 class="t-h" data-t="t_h">Here're your tasks for next 66 days</h1>
+    <p class="t-sub" data-t="t_sub">You can have max 12 tasks</p>
+    <div class="t-list">
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><circle cx="12" cy="13" r="4"/><path d="M12 3v3M4.5 7.5l2 2M19.5 7.5l-2 2M3 17h18"/></svg><div><b data-t="t1">Wake up early</b><span data-t="t1s">Rise before everyone, seize the day.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><path d="M7 3h10l-1.5 18h-7z"/><path d="M7.6 10h8.8"/></svg><div><b data-t="t2">Drink water</b><span data-t="t2s">Stay hydrated, stay energised.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><path d="M3 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H3zM21 5h-7a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h7z"/></svg><div><b data-t="t3">Read books</b><span data-t="t3s">Reading is food for thought.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></svg><div><b data-t="t4">Weight training</b><span data-t="t4s">Build strength and power with weights.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><circle cx="14" cy="4.5" r="1.8"/><path d="M8 21l3-6 3 3v4M7 12l3-4 4 2 2 3M14 10l-2 5"/></svg><div><b data-t="t5">Run</b><span data-t="t5s">Running is the best therapy.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><path d="M3 15h13v3H3zM18 15v3M20 15v3M17 12c0-2 2-2 2-4"/></svg><div><b data-t="t6">No smoking</b><span data-t="t6s">Breathe freely and reclaim your health.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><path d="M6 3h12l-6 9zM12 12v8M8 21h8"/></svg><div><b data-t="t7">No alcohol</b><span data-t="t7s">Stay clear-headed and make better decisions.</span></div></div>
+      <div class="t-item"><svg class="s-ic" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><div><b data-t="t8">Social media limit</b><span data-t="t8s">Stop doom scrolling.</span></div></div>
+    </div>
+    <button class="t-btn2"><span data-t="t_add">Add or remove task</span></button>
+    <button class="s-cta" data-go="rating"><span data-t="t_ok">Looks good</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="rating" style="background:var(--b-surface2)">
+  <div class="r-art" data-show="char:f"></div>
+  <div class="r-art r-m" data-show="char:m"></div>
+  <div class="s-pad">
+    <div data-show="view:cur"><h1 class="r-h" data-t="rt_cur">Your Current Rating</h1></div>
+    <div data-show="view:pot"><h1 class="r-h" data-t="rt_pot">Your Potential Rating</h1></div>
+    <div class="r-card">
+      <div class="r-lvl"><b><span data-show="view:cur">1</span><span data-show="view:pot">31</span></b><span data-t="rt_level">LEVEL</span></div>
+      <div class="r-xp"><b><span data-show="view:cur">0</span><span data-show="view:pot">11175</span></b><span data-t="rt_xp">XP earned</span></div>
+    </div>
+    <div class="r-bar" data-show="view:cur"></div><div class="r-bar r-pot" data-show="view:pot"></div>
+    <div class="r-next"><span data-show="view:cur"><span data-t="rt_next1">125 XP to Lvl 2</span></span><span data-show="view:pot"><span data-t="rt_next2">25 XP to Lvl 32</span></span></div>
+    <div class="r-stats">
+      <div class="r-stat"><svg class="s-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg><span data-t="st_w">Wisdom</span><em><i>▲ </i><span data-show="view:cur">50</span><span data-show="view:pot">116</span></em></div>
+      <div class="r-stat"><svg class="s-ic" viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.5"/><path d="M6 20l6-9 6 9M8 14h8"/></svg><span data-t="st_c">Confidence</span><em><i>▲ </i>44</em></div>
+      <div class="r-stat"><svg class="s-ic" viewBox="0 0 24 24"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></svg><span data-t="st_s">Strength</span><em><i>▲ </i><span data-show="view:cur">44</span><span data-show="view:pot">181</span></em></div>
+      <div class="r-stat"><svg class="s-ic" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span data-t="st_d">Discipline</span><em><i>▲ </i><span data-show="view:cur">51</span><span data-show="view:pot">163</span></em></div>
+      <div class="r-stat"><svg class="s-ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span data-t="st_f">Focus</span><em><i>▲ </i><span data-show="view:cur">45</span><span data-show="view:pot">177</span></em></div>
+    </div>
+    <div style="margin-top:auto" data-show="view:cur"><button class="s-cta s-see" data-pick="view:pot"><span data-t="rt_see">⚡ See potential rating</span></button></div>
+    <div style="margin-top:auto" data-show="view:pot"><button class="s-cta" data-go="lockin"><span data-t="continue">Continue</span></button></div>
+  </div>
+</section>
+
+<section class="scr" data-id="lockin">
+  <div class="l-bg"></div><div class="l-art"></div>
+  <div class="s-pad">
+    <img class="l-mark" src="assets/crop/mark.png" alt="">
+    <h1 class="l-h" data-t="l_h">Are you ready to lock in?</h1>
+    <p class="l-sub" data-t="l_sub">The path has been revealed to you. Will you take the first step into the unknown, or remain at the gates of destiny?</p>
+    <p class="l-k" data-t="l_k">Commit to growing with Life Reset</p>
+    <div class="l-grid">
+      <button class="l-opt" data-pick="streak:7"><b data-t="l_7">7-day streak</b><span data-t="l_7s">14% choose this</span></button>
+      <button class="l-opt" data-pick="streak:14"><b data-t="l_14">14-day streak</b><span data-t="l_14s">54% choose this</span></button>
+      <button class="l-opt" data-pick="streak:30"><b data-t="l_30">30-day streak</b><span data-t="l_30s">23% choose this</span></button>
+      <button class="l-opt" data-pick="streak:50"><b data-t="l_50">50-day streak</b><span data-t="l_50s">9% choose this</span></button>
+    </div>
+    <button class="l-fp" id="lrHold" aria-label="Tap and hold to lock in"><svg viewBox="0 0 24 24"><path d="M12 11v4a6 6 0 0 0 1.5 4M8.5 12a3.5 3.5 0 0 1 7 0v2.5M6 15.5V12a6 6 0 0 1 9.5-4.9M18 12v3.5M4.5 9A8 8 0 0 1 19 7.5"/></svg></button>
+    <p class="l-hint" data-t="l_hint">Tap and hold to lock in</p>
+  </div>
+</section>
+
+<section class="scr" data-id="plan">
+  <div class="p-bg"></div>
+  <div class="s-pad">
+    <span class="p-ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+    <h1 class="p-h"><span data-t="p_h1">Your 66 days to </span><u data-bind="label:goal"></u></h1>
+    <p class="p-by" data-t="p_by">You will reset your life and become great by:</p>
+    <span class="p-date" id="lrDate">Dec 27, 2026</span>
+    <div class="p-card">
+      <img src="assets/crop/char-f.png" alt="" data-show="char:f"><img src="assets/crop/char-m.png" alt="" data-show="char:m">
+      <div style="flex:1">
+        <div class="p-lv"><span data-t="p_lv">LEVEL</span> <b>1</b> → <b class="p-to">31</b></div>
+        <div class="p-rows"><span data-t="st_s">Strength</span><em>44 → 181</em><span data-t="st_d">Discipline</span><em>51 → 163</em><span data-t="st_f">Focus</span><em>45 → 177</em></div>
+      </div>
+    </div>
+    <ul class="p-list">
+      <li><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-t="p_b1">Your physical strength will drastically improve</span></li>
+      <li><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-t="p_b2">Your endurance and discipline will be 3x stronger</span></li>
+      <li><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-t="p_b3">You will feel more motivated and energized than ever</span></li>
+      <li><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-t="p_b4">Your dopamine reward system will be refreshed</span></li>
+    </ul>
+    <button class="s-cta s-violet" data-go="paywall" style="margin-top:auto"><span data-t="p_cta">Start My Program</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="paywall">
+  <div class="pw-bg"></div>
+  <div class="s-pad" style="padding-bottom:22px">
+    <div class="pw-top"><button class="pw-rs"><span data-t="pw_rs">Restore</span></button><img src="assets/crop/mark.png" alt=""><button class="s-x" data-go="offer" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <h1 class="pw-h"><span data-t="pw_h1">Invest in yourself and </span><span data-bind="label:goal"></span><span data-t="pw_h2"> in 66 days.</span></h1>
+    <p class="pw-sub" data-t="pw_sub">Get full access to Life Reset include unlimited program generation, science-based task planning, daily ritual and improvement tracker + much more!</p>
+    <img class="pw-mock" src="assets/crop/mockups.png" alt="">
+    <div class="pw-plans">
+      <button class="pw-plan" data-pick="plan:month"><small data-t="pw_mo">MONTHLY</small><b data-t="pw_moP">$17.99/mo</b></button>
+      <button class="pw-plan" data-pick="plan:year"><span class="pw-badge" data-t="pw_save">SAVE 68%</span><small data-t="pw_yr">YEARLY</small><b data-t="pw_yrP">$69.99/yr</b></button>
+    </div>
+    <div class="pw-notes"><span data-t="pw_basic">Basic plan</span><b data-t="pw_pm">Just $5.83 per month!</b></div>
+    <div class="pw-proof">
+      <div class="pw-stars"><i>★★★★★</i><span data-t="pw_rating">4.7 · 12,700+ ratings on the App Store</span></div>
+      <p class="pw-q"><span data-t="pw_quote">“Best investment I have ever made. Never regretted it.”</span> <small data-t="pw_who">Darren from CA, United States</small></p>
+    </div>
+    <button class="s-cta s-violet" data-go="done"><span data-t="pw_cta">Kickstart My Journey</span></button>
+    <div class="pw-bill" data-t="pw_bill">Billed annually - cancel anytime.</div>
+    <div class="pw-legal"><span data-t="terms">Terms of Use</span><span data-t="privacy">Privacy Policy</span></div>
+  </div>
+</section>
+
+<section class="scr sheet" data-id="offer">
+  <div class="o-bg"></div>
+  <button class="o-x" data-back aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="s-pad">
+    <h1 class="o-h" data-t="o_h">One Time Offer</h1>
+    <p class="o-sub" data-t="o_sub">Not ready for $69.99? Start your 66 days for less.</p>
+    <img class="o-gift" src="assets/crop/giftcard.png" alt="">
+    <div class="o-card">
+      <p class="o-pct" data-t="o_pct">43% off</p>
+      <span class="o-pill" data-t="o_pill">$39.99 a year · $3.33 a month</span>
+      <p class="o-was" data-t="o_was">instead of $69.99 a year</p>
+      <ul class="o-list"><li data-t="o_l1">As low as $0.11 per day</li><li data-t="o_l2">66 days life reset program</li><li data-t="o_l3">Unlimited access</li></ul>
+    </div>
+    <button class="s-cta s-white" data-go="done" style="margin-top:auto"><span data-t="o_cta">Claim my 43% off</span></button>
+    <div class="pw-bill" data-t="pw_bill">Billed annually - cancel anytime.</div>
+    <button class="s-link" data-back><span data-t="o_no">No thanks</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="done">
+  <div class="p-bg"></div>
+  <div class="s-pad">
+    <img class="d-mark" src="assets/crop/mark.png" alt="">
+    <h1 class="d-h" data-t="d_h">You're in. Day 1 starts now.</h1>
+    <p class="d-sub" data-t="d_sub">Two last things, now that your program is unlocked.</p>
+    <p class="d-k" data-t="d_k1">Save your progress</p>
+    <button class="d-btn"><span data-t="d_apple">Continue with Apple</span></button>
+    <button class="d-btn"><span data-t="d_google">Continue with Google</span></button>
+    <button class="d-btn"><span data-t="d_email">Continue with Email</span></button>
+    <p class="d-k" style="margin-top:14px" data-t="d_k2">Get daily notifications to keep motivated</p>
+    <div class="d-tg"><div><b data-t="d_n1">Stay on track</b><span data-t="d_n1s">Remember to hit your daily tasks and never lose your streak!</span></div><i class="d-sw"></i></div>
+    <div class="d-tg"><div><b data-t="d_n2">Daily ritual</b><span data-t="d_n2s">Get reminders to start your daily ritual</span></div><i class="d-sw"></i></div>
+    <button class="s-cta" style="margin-top:auto"><span data-t="d_cta">Start Day 1</span></button>
+  </div>
+</section>
+
+<section class="scr" data-id="today" data-aside>
+  <div class="pw-bg"></div>
+  <div class="s-pad" style="padding-bottom:22px">
+    <div class="pw-top"><span class="pw-rs">Restore</span><img src="assets/crop/mark.png" alt=""><span class="s-x"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div>
+    <h1 class="pw-h" style="margin-top:22px">Invest in yourself and make an epic life comeback in 66 days.</h1>
+    <p class="pw-sub">Get full access to Life Reset include unlimited program generation, science-based task planning, daily ritual and improvement tracker + much more!</p>
+    <img class="pw-mock" src="assets/crop/mockups.png" alt="" style="margin-top:22px">
+    <div class="pw-plans" style="margin-top:26px">
+      <div class="pw-plan"><small>MONTHLY</small><b>$17.99/mo</b></div>
+      <div class="pw-plan on"><span class="pw-badge">SAVE 70%</span><small>YEARLY</small><b>$69.99/yr</b></div>
+    </div>
+    <div class="pw-notes"><span>Basic plan</span><b>Just $5.83 per month!</b></div>
+    <div class="s-cta s-violet" style="margin-top:26px">Kickstart My Journey</div>
+    <div class="pw-legal" style="margin-top:22px"><span>Terms of Use</span><span>Privacy Policy</span></div>
+  </div>
+</section>
+<!-- SCREENS:END -->
+
+      </div></div>
+      <div class="au-pn" id="panel" aria-live="polite"></div>
+    </div>
+    <p class="au-hint">Close the paywall with ✕ to see idea 5. On the lock-in screen, press and hold the fingerprint.</p>
+    <!-- shown when CONTENT.liveUrl is set: assets/qr-app.png = qr.swift "<liveUrl>?app" -->
+    <div class="au-qr" id="qrCard" hidden><img src="assets/qr-app.png" alt="QR code that opens the prototype full screen"><div><b>Try it on your phone</b><p>Scan to open the prototype full screen, the way a new user would see it.</p></div></div>
+    <div class="au-mobw" id="qrMob" hidden><a class="au-btn" href="?app">Open it full screen</a></div>
+  </div>
+</section>
+
+<!-- the paywall TODAY vs PROPOSED — built from CONTENT.compare (stills: assets/hero/<today>.png, <proposed>.png) -->
+<section class="au-sec" id="compare" hidden><div class="au-wrap" id="cmpBody"></div></section>
+
+<footer class="au-foot" id="sources">
+  <div class="au-wrap">
+    <details id="srcDetails">
+      <summary>Where the numbers come from</summary>
+      <div class="au-srcs" id="srcBody"></div>
+    </details>
+    <p class="au-fine" id="fine"></p>
+    <div class="au-cta-line">
+      <p>Every screen here can be built and A/B tested in Adapty’s Flow Builder, with no app release.</p>
+      <a class="au-btn" href="https://adapty.io/flow-paywall-builder/" target="_blank" rel="noopener">About Flow Builder</a>
+    </div>
+  </div>
+</footer>
+
+<!-- extras: video dialog (CONTENT.video), ?app bar, ?tour overlay (CONTENT.tour) -->
+<dialog class="au-vid" id="vid" aria-label="Walkthrough video">
+  <div class="au-vid-in"><video id="vidEl" controls muted playsinline preload="none"></video></div>
+  <div class="au-vid-bar"><a id="vidDl" download>Download the MP4</a><button type="button" class="au-vid-x" id="vidX">Close</button></div>
+</dialog>
+<div class="au-scrim" id="abScrim"></div>
+<div class="au-appbar" id="appbar">
+  <button type="button" class="au-ab-why" id="abWhy"><i></i><span id="abT"></span><em>Why ↑</em></button>
+  <div class="au-lsw" id="abLang" role="group" aria-label="Language"></div>
+</div>
+<div class="au-tour" aria-hidden="true">
+  <div class="au-tb"><img src="assets/brand/appstore-icon.jpg" alt="">Growth Audit <small>· Life Reset</small></div>
+  <div class="au-tby">Prepared by Adapty</div>
+  <div class="au-tcap" id="tCap"></div>
+  <div class="au-ttap" id="tTap"></div>
+  <div class="au-tprog"><i id="tProg"></i></div>
+  <div class="au-tintro" id="tIntro"></div>
+  <div class="au-tend" id="tEnd"></div>
+</div>
+
+<!-- CONTENT — all the audit's words and numbers, as data. Schema (brand-check enforces it):
+     ideas  : 3–5 rows, ranked (the audit is five ideas, never fifteen). screen = the screen that shows it.
+     panel  : one entry per screen. idea = its number in ideas (1-based) or 0 for a context screen.
+              why on an idea screen reads "<b>Try</b> X, <b>because</b> Y." in ≤ 45 words; iv = its range.
+              why on a context screen is one line saying what it sets up.
+     hero   : three screen ids shown as stills in the hero — run hero-stills.sh after the screens are done.
+     outcome: combined "up to" numbers, PS-deck style, never above the ceiling of the per-idea ranges.
+     sources: public facts only — App Store, their site, their screens. No sales research on this page.
+     EXTRAS (each one hides itself when left empty):
+     langs  : [{"code":"en","name":"English"},{"code":"es","name":"Español · Spain prices"}] — first = the markup's language
+     i18n   : {"es": {"<data-t key>": "text with {tokens}"}} — every data-t key, for every language after the first
+     prices : {"es": {"yr": "39,99 €", …}} — {tokens} in i18n strings; that storefront's real IAP prices
+     labelsI18n: {"es": {"goal": {"a": "…"}}} — C.labels per language (data-bind="label:…")
+     liveUrl: final Pages URL (QR card + video end card); the QR file encodes liveUrl + "?app"
+     video / poster: "assets/walkthrough.mp4" / "assets/walkthrough-poster.jpg" (record-video.sh)
+     compare: {today, proposed, kicker, title, sub, todayCap, rows:[{h, idea, was, now}], kept} — today = a data-aside screen
+     tour   : {segments:[{id, d, st, tap:[selector-in-screen, ms], pop, reveal, end}], captions:{id:{n|k, t, l, o, ol}},
+              introLede, endTitle} — ~30 s total; the last segment has end:true (the end card) -->
+<script type="application/json" id="content">
+{
+ "app": "Life Reset",
+ "state": {
+  "goal": "motivation",
+  "char": "f",
+  "view": "cur",
+  "streak": "14",
+  "plan": "year"
+ },
+ "labels": {
+  "goal": {
+   "motivation": "build motivation and discipline",
+   "career": "level up your study and career",
+   "quit": "quit porn and take your life back",
+   "fit": "build muscle and get fit",
+   "setback": "bounce back from a major setback",
+   "none": "build motivation and discipline"
+  }
+ },
+ "chips": {
+  "welcome": "Welcome",
+  "reason": "Your reason",
+  "character": "Character",
+  "tasks": "Tasks",
+  "rating": "Rating",
+  "lockin": "Lock in",
+  "plan": "Your plan",
+  "paywall": "Paywall",
+  "offer": "Offer",
+  "done": "You’re in"
+ },
+ "hero": [
+  "plan",
+  "paywall",
+  "rating"
+ ],
+ "outcome": {
+  "cr": "+20%",
+  "arpu": "+15%"
+ },
+ "ideas": [
+  {
+   "screen": "plan",
+   "title": "Use the reason they gave you",
+   "what": "New users tell you their biggest reason to reset (“Lack motivation and discipline”, “Build muscle and get fit”…), pick a character and earn a Level 1 → Level 31 rating. Then the plan and the paywall both say “an epic life comeback in 66 days”. Name their reason on the plan and in the paywall headline, with their character levelling up.",
+   "impact": "+15–20%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "welcome",
+   "title": "Let them in before you ask for anything",
+   "what": "Today the notification prompt fires before the first screen, the first screen is an Apple / Google / Email sign-up with a verification code, and App Tracking pops up over the task list. Open with one “Start my reset” button; ask for the account and the permissions after the purchase.",
+   "impact": "+10–15%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "paywall",
+   "title": "Put your 4.7 stars beside the button",
+   "what": "Your paywall shows no rating and no review; they sit two screens before it. Show “4.7 · 12,700+ ratings” and Darren’s “Best investment I have ever made” right above “Kickstart My Journey”.",
+   "impact": "+10–15%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "lockin",
+   "title": "One commitment, not seven",
+   "what": "Between the rating and the plan come Hard Mode, a penalty system, a streak pick, five “Do you vow…” questions (one of them asked twice) and tap-and-hold. Keep the streak pick and tap-and-hold, together on one screen.",
+   "impact": "+5–10%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "offer",
+   "title": "Make the second chance honest",
+   "what": "A 30-minute “Claim Limited Discount” shows before the full price, and the close offer calls $39.99 a year “70% off… lowest ever”. It is 43% less than your $69.99. Show $69.99 first; offer $39.99 only on close, as 43% off, without the clock.",
+   "impact": "+10–15%",
+   "il": "ARPU"
+  }
+ ],
+ "panel": {
+  "welcome": {
+   "idea": 2,
+   "t": "Let them in before you ask for anything",
+   "why": "<b>Try</b> one “Start my reset” button and move sign-up, notifications, tracking and the rating prompt after the purchase, <b>because</b> today an account wall and two system pop-ups come before anyone sees their plan.",
+   "iv": "CR +10–15%",
+   "il": "to purchase",
+   "also": "Sign-up and reminders come back on the last screen, after the purchase."
+  },
+  "reason": {
+   "idea": 0,
+   "t": "Their biggest reason",
+   "why": "Your question and answers, verbatim. Idea 1 makes the plan and the paywall repeat the answer."
+  },
+  "character": {
+   "idea": 0,
+   "t": "Their character",
+   "why": "Kept. The character they pick appears again on the plan, levelling from 1 to 31."
+  },
+  "tasks": {
+   "idea": 0,
+   "t": "Their 66-day tasks",
+   "why": "Kept word for word, minus the App Tracking pop-up that fires over this list today (idea 2)."
+  },
+  "rating": {
+   "idea": 0,
+   "t": "Level 1 → Level 31",
+   "why": "Your RPG rating, kept: current and potential. It is the payoff idea 1 carries to the paywall."
+  },
+  "lockin": {
+   "idea": 4,
+   "t": "One commitment, not seven",
+   "why": "<b>Try</b> the streak pick and tap-and-hold as one screen, dropping Hard Mode, the penalty rules and the five “Do you vow” questions, <b>because</b> one vow is asked twice and every extra step before the paywall is a chance to leave.",
+   "iv": "CR +5–10%",
+   "il": "to purchase"
+  },
+  "plan": {
+   "idea": 1,
+   "t": "Use the reason they gave you",
+   "why": "<b>Try</b> naming their reason on the plan, with their character going from Level 1 to Level 31, and again in the paywall headline, <b>because</b> today both screens say “an epic life comeback” whatever they answered.",
+   "iv": "CR +15–20%",
+   "il": "to purchase",
+   "also": "The same reason opens the paywall headline on the next screen."
+  },
+  "paywall": {
+   "idea": 3,
+   "t": "Put your 4.7 stars beside the button",
+   "why": "<b>Try</b> 4.7 stars from 12,700+ ratings and Darren’s “Best investment I have ever made” right above “Kickstart My Journey”, <b>because</b> the paywall itself shows no proof; your reviews sit two screens earlier.",
+   "iv": "CR +10–15%",
+   "il": "to purchase",
+   "also": "Also here: idea 1 (the headline names their reason) and idea 5 (the badge says 68%, the saving your prices actually give)."
+  },
+  "offer": {
+   "idea": 5,
+   "t": "Make the second chance honest",
+   "why": "<b>Try</b> showing $69.99 first and offering the real $39.99 plan only on close, as 43% off with no clock, <b>because</b> a discount before the paywall teaches people to wait, and “70% off” matches neither of your prices.",
+   "iv": "ARPU +10–15%",
+   "il": "average revenue per user"
+  },
+  "done": {
+   "idea": 0,
+   "t": "Then sign-up and reminders",
+   "why": "After the purchase: the account and your own reminder screen move here, out of the path to the paywall (idea 2)."
+  }
+ },
+ "langs": [
+  {
+   "code": "en",
+   "name": "English"
+  },
+  {
+   "code": "zh",
+   "name": "繁體中文 · Taiwan prices"
+  }
+ ],
+ "i18n": {
+  "zh": {
+   "lang": "🇹🇼 繁體中文",
+   "w_tag": "身心合一",
+   "w_tag2": "與你的心智和環境同步",
+   "w_installs": "次安裝",
+   "w_cta": "開始我的重啟",
+   "w_have": "我已經有帳號",
+   "r_q": "你想重啟人生最大的原因是什麼？",
+   "r_o1": "缺乏動力和自律",
+   "r_o2": "提升學業與事業",
+   "r_o3": "戒除色情成癮，改善生活",
+   "r_o4": "增肌並變得健康",
+   "r_o5": "走出人生重大挫折",
+   "c_q": "選擇你的角色",
+   "continue": "繼續",
+   "t_h": "這是你接下來 66 天的任務",
+   "t_sub": "最多可以有 12 個任務",
+   "t1": "早起",
+   "t1s": "比所有人早起，掌握這一天。",
+   "t2": "喝水",
+   "t2s": "保持水分，保持活力。",
+   "t3": "閱讀",
+   "t3s": "閱讀是思想的食糧。",
+   "t4": "重量訓練",
+   "t4s": "用重量鍛鍊力量與爆發力。",
+   "t5": "跑步",
+   "t5s": "跑步是最好的療癒。",
+   "t6": "不抽菸",
+   "t6s": "自由呼吸，奪回你的健康。",
+   "t7": "不喝酒",
+   "t7s": "保持清醒，做出更好的決定。",
+   "t8": "限制社群媒體",
+   "t8s": "停止無止盡地滑手機。",
+   "t_add": "新增或移除任務",
+   "t_ok": "看起來不錯",
+   "rt_cur": "你目前的評級",
+   "rt_pot": "你的潛力評級",
+   "rt_level": "等級",
+   "rt_xp": "已獲得 XP",
+   "rt_next1": "再 125 XP 升到 2 級",
+   "rt_next2": "再 25 XP 升到 32 級",
+   "st_w": "智慧",
+   "st_c": "自信",
+   "st_s": "力量",
+   "st_d": "自律",
+   "st_f": "專注",
+   "rt_see": "⚡ 查看潛力評級",
+   "l_h": "準備好鎖定了嗎？",
+   "l_sub": "道路已向你展開。你會踏出走向未知的第一步，還是停留在命運之門前？",
+   "l_k": "承諾與 Life Reset 一起成長",
+   "l_7": "連續 7 天",
+   "l_7s": "14% 的人選擇",
+   "l_14": "連續 14 天",
+   "l_14s": "54% 的人選擇",
+   "l_30": "連續 30 天",
+   "l_30s": "23% 的人選擇",
+   "l_50": "連續 50 天",
+   "l_50s": "9% 的人選擇",
+   "l_hint": "長按以鎖定",
+   "p_h1": "你的 66 天：",
+   "p_by": "你將在這一天重啟人生、變得更好：",
+   "p_lv": "等級",
+   "p_b1": "你的體能將大幅提升",
+   "p_b2": "你的耐力與自律將強 3 倍",
+   "p_b3": "你將感到前所未有的動力與活力",
+   "p_b4": "你的多巴胺獎勵系統將煥然一新",
+   "p_cta": "開始我的計畫",
+   "pw_rs": "恢復購買",
+   "pw_h1": "投資自己，",
+   "pw_h2": "，就在 66 天內。",
+   "pw_sub": "完整解鎖 Life Reset：無限次計畫生成、科學化任務規劃、每日儀式與進步追蹤，還有更多！",
+   "pw_mo": "月繳",
+   "pw_moP": "{mo}/月",
+   "pw_save": "省 {save}",
+   "pw_yr": "年繳",
+   "pw_yrP": "{yr}/年",
+   "pw_basic": "基本方案",
+   "pw_pm": "每月只要 {pm}！",
+   "pw_rating": "App Store 4.8 分 · 1,897 則評分",
+   "pw_quote": "「這是我做過最好的投資，從不後悔。」",
+   "pw_who": "Darren，美國加州",
+   "pw_cta": "啟動我的旅程",
+   "pw_bill": "按年計費，可隨時取消。",
+   "terms": "使用條款",
+   "privacy": "隱私權政策",
+   "o_h": "一次性優惠",
+   "o_sub": "還沒準備好付 {yr}？用更少的錢開始你的 66 天。",
+   "o_pct": "省 {offpct}",
+   "o_pill": "{off}/年 · 每月 {offpm}",
+   "o_was": "而不是 {yr}/年",
+   "o_l1": "每天約 {pd}",
+   "o_l2": "66 天人生重啟計畫",
+   "o_l3": "無限制使用",
+   "o_cta": "領取我的 {offpct} 優惠",
+   "o_no": "不用了，謝謝",
+   "d_h": "你已加入。第 1 天現在開始。",
+   "d_sub": "計畫已解鎖，最後兩件事。",
+   "d_k1": "儲存你的進度",
+   "d_apple": "使用 Apple 繼續",
+   "d_google": "使用 Google 繼續",
+   "d_email": "使用電子郵件繼續",
+   "d_k2": "開啟每日通知，保持動力",
+   "d_n1": "保持進度",
+   "d_n1s": "提醒你完成每日任務，絕不中斷連續紀錄！",
+   "d_n2": "每日儀式",
+   "d_n2s": "提醒你開始每日儀式",
+   "d_cta": "開始第 1 天"
+  }
+ },
+ "prices": {
+  "zh": {
+   "mo": "NT$590",
+   "yr": "NT$1,990",
+   "pm": "NT$166",
+   "save": "72%",
+   "off": "NT$1,190",
+   "offpm": "NT$99",
+   "offpct": "40%",
+   "pd": "NT$3.3"
+  }
+ },
+ "labelsI18n": {
+  "zh": {
+   "goal": {
+    "motivation": "建立動力與自律",
+    "career": "提升學業與事業",
+    "quit": "戒掉色情、奪回人生",
+    "fit": "增肌並變得健康",
+    "setback": "從重大挫折中重新站起",
+    "none": "建立動力與自律"
+   }
+  }
+ },
+ "liveUrl": "https://eddieatadapty.github.io/lifereset-flow-rebuild/",
+ "video": "assets/walkthrough.mp4",
+ "poster": "assets/walkthrough-poster.jpg",
+ "compare": {
+  "today": "today",
+  "proposed": "paywall",
+  "kicker": "The paywall, side by side",
+  "title": "Today and proposed.",
+  "sub": "Same screen, same prices, five changes.",
+  "todayCap": "rebuilt from your recorded onboarding",
+  "rows": [
+   {
+    "h": "Headline",
+    "idea": 1,
+    "was": "Invest in yourself and make an epic life comeback in 66 days.",
+    "now": "Invest in yourself and build motivation and discipline in 66 days, from their own answer."
+   },
+   {
+    "h": "Proof",
+    "idea": 3,
+    "was": "None on the paywall; the reviews sit two screens earlier.",
+    "now": "4.7 · 12,700+ ratings and Darren’s quote, right above the button."
+   },
+   {
+    "h": "Saving badge",
+    "idea": 5,
+    "was": "SAVE 70%",
+    "now": "SAVE 68%: $69.99 against 12 × $17.99 ($215.88)."
+   },
+   {
+    "h": "Before it",
+    "idea": 5,
+    "was": "A 30-minute “Claim Limited Discount” countdown, on two screens.",
+    "now": "No discount before the full price."
+   },
+   {
+    "h": "On close",
+    "idea": 5,
+    "was": "Gift card, then “70% off · $39.99/yr · lowest ever” with a countdown.",
+    "now": "One sheet: $39.99 a year, 43% off $69.99, no countdown."
+   }
+  ],
+  "kept": "Kept: your purple paywall, the five-phone carousel, both plans and prices, “Kickstart My Journey”, Restore and the ✕."
+ },
+ "tour": {
+  "introLede": "Five ideas, each built into your own onboarding.",
+  "segments": [
+   {
+    "id": "welcome",
+    "d": 3200,
+    "tap": [
+     ".s-cta",
+     2500
+    ]
+   },
+   {
+    "id": "reason",
+    "d": 1900,
+    "st": {
+     "goal": "none"
+    },
+    "tap": [
+     "[data-pick=\"goal:fit\"]",
+     1400
+    ]
+   },
+   {
+    "id": "reason",
+    "d": 900,
+    "st": {
+     "goal": "fit"
+    }
+   },
+   {
+    "id": "character",
+    "d": 2100,
+    "st": {
+     "char": "f"
+    },
+    "tap": [
+     ".s-cta",
+     1600
+    ]
+   },
+   {
+    "id": "tasks",
+    "d": 1900,
+    "tap": [
+     ".s-cta",
+     1400
+    ]
+   },
+   {
+    "id": "rating",
+    "d": 1800,
+    "st": {
+     "view": "cur"
+    },
+    "tap": [
+     ".s-see",
+     1300
+    ]
+   },
+   {
+    "id": "rating",
+    "d": 2000,
+    "st": {
+     "view": "pot"
+    },
+    "pop": ".r-card"
+   },
+   {
+    "id": "lockin",
+    "d": 2300,
+    "st": {
+     "streak": "14"
+    },
+    "tap": [
+     ".l-fp",
+     1700
+    ]
+   },
+   {
+    "id": "plan",
+    "d": 2800,
+    "pop": ".p-card"
+   },
+   {
+    "id": "paywall",
+    "d": 3300,
+    "reveal": ".pw-proof",
+    "tap": [
+     ".s-x",
+     2900
+    ]
+   },
+   {
+    "id": "offer",
+    "d": 2600,
+    "tap": [
+     ".s-cta",
+     2200
+    ]
+   },
+   {
+    "id": "done",
+    "d": 2000
+   },
+   {
+    "id": "done",
+    "d": 2600,
+    "end": true
+   }
+  ],
+  "captions": {
+   "welcome": {
+    "n": 2,
+    "t": "Let them in first",
+    "l": "One button. Sign-up and pop-ups wait until after the purchase.",
+    "o": "CR +10–15%",
+    "ol": "to purchase"
+   },
+   "reason": {
+    "k": "Context",
+    "t": "Their biggest reason",
+    "l": "Asked today, never used again. Until now."
+   },
+   "character": {
+    "k": "Context",
+    "t": "Their character",
+    "l": "Picked here, levelling up on the plan."
+   },
+   "tasks": {
+    "k": "Context",
+    "t": "Their 66-day tasks",
+    "l": "Kept, without the tracking pop-up on top."
+   },
+   "rating": {
+    "k": "Context",
+    "t": "Level 1 → Level 31",
+    "l": "The payoff Life Reset already computes."
+   },
+   "lockin": {
+    "n": 4,
+    "t": "One commitment, not seven",
+    "l": "Streak and tap-and-hold together. The vows go.",
+    "o": "CR +5–10%",
+    "ol": "to purchase"
+   },
+   "plan": {
+    "n": 1,
+    "t": "Use the reason they gave you",
+    "l": "Their goal and character on the plan, then the paywall.",
+    "o": "CR +15–20%",
+    "ol": "to purchase"
+   },
+   "paywall": {
+    "n": 3,
+    "t": "Stars beside the button",
+    "l": "4.7 from 12,700+ ratings, right above the CTA.",
+    "o": "CR +10–15%",
+    "ol": "to purchase"
+   },
+   "offer": {
+    "n": 5,
+    "t": "An honest second chance",
+    "l": "$39.99 instead of $69.99. 43% off, no clock.",
+    "o": "ARPU +10–15%",
+    "ol": "average revenue per user"
+   },
+   "done": {
+    "k": "Context",
+    "t": "Then sign-up and reminders",
+    "l": "After the purchase, not before it."
+   }
+  }
+ },
+ "grounding": "Impact ranges are Adapty’s expected effect from teardowns and A/B tests across 30,000+ subscription apps, not measured lift for Life Reset. They overlap, so they don’t add up.",
+ "sources": [
+  {
+   "group": "Prices",
+   "items": [
+    {
+     "dt": "$17.99/mo · $69.99/yr",
+     "dd": "Your onboarding paywall as recorded (live iOS app, December 2025). $17.99 is also on your US App Store In-App Purchases list; $69.99 is not among the ten the listing shows, so confirm it is still live."
+    },
+    {
+     "dt": "$39.99/yr",
+     "dd": "Your close offer as recorded, and “Life Reset (Full Access) $39.99” on the US In-App Purchases list."
+    },
+    {
+     "dt": "68% · $5.83 · 43% · $3.33 · $0.11",
+     "dd": "Our arithmetic: $69.99 against 12 × $17.99 = $215.88; $69.99 ÷ 12; $39.99 against $69.99; $39.99 ÷ 12; $39.99 ÷ 365."
+    },
+    {
+     "dt": "NT$590 · NT$1,990 · NT$1,190 (Chinese version)",
+     "dd": "Taiwan App Store In-App Purchases list. We matched them by rank to your monthly, yearly and offer prices; we haven’t seen your Taiwan paywall, so treat NT$1,990 as our reading. Savings recomputed: 72%, NT$166, 40%, NT$99."
+    },
+    {
+     "dt": "Not used",
+     "dd": "$12.99, $28.99, $34.99, $49.99, $59.99 (US list) and the Winter Arc Pack: none appear on the recorded paywall."
+    }
+   ]
+  },
+  {
+   "group": "Proof",
+   "items": [
+    {
+     "dt": "4.7 · 12,700+ ratings",
+     "dd": "US App Store listing: 4.7 from 12,728 ratings, October 2026."
+    },
+    {
+     "dt": "4.8 · 1,897 ratings (Chinese version)",
+     "dd": "Taiwan App Store listing, October 2026."
+    },
+    {
+     "dt": "Darren’s quote",
+     "dd": "Your own onboarding, the screen before the paywall, verbatim."
+    },
+    {
+     "dt": "1M+ installs · 14% / 54% / 23% / 9% choose this",
+     "dd": "Your welcome and streak screens, verbatim."
+    },
+    {
+     "dt": "Level 1 → 31 and the stat values",
+     "dd": "Your rating screens, as the app computed them for the recorded user."
+    }
+   ]
+  },
+  {
+   "group": "Features and copy",
+   "items": [
+    {
+     "dt": "Every kept line",
+     "dd": "Your recorded iOS onboarding, verbatim: the reason question, character, tasks, rating, lock-in, program outcome, paywall and offer."
+    },
+    {
+     "dt": "New lines",
+     "dd": "“Start my reset”, “I already have an account”, the plan heading, the proof label, the offer copy and the last screen’s heading are ours."
+    },
+    {
+     "dt": "Traditional Chinese",
+     "dd": "Our translation, not yours. Taiwan is your largest non-English storefront by ratings once Hong Kong is added."
+    }
+   ]
+  },
+  {
+   "group": "Design",
+   "items": [
+    {
+     "dt": "Colours",
+     "dd": "Sampled off your recorded screens: the orange button, warm black and quiz greys, the purple paywall gradient and the purple-to-blue button."
+    },
+    {
+     "dt": "Type",
+     "dd": "Your app uses a wide geometric sans; Lexend (Google Fonts) is the closest open family."
+    },
+    {
+     "dt": "Art",
+     "dd": "Welcome photo, phone carousel, gift card and lock-in art cut from your recorded screens; the two characters from your first App Store screenshot; the sunburst mark from lifereset.com, background removed."
+    }
+   ]
+  },
+  {
+   "group": "What we couldn’t see",
+   "items": [
+    {
+     "dt": "Your numbers and test history",
+     "dd": "We worked from the outside: no conversion data, no idea which of these you have tried."
+    },
+    {
+     "dt": "A free trial",
+     "dd": "You run a hard paywall. In Health & Fitness, trials tend to lift lifetime value, so it deserves its own test, but the trial length is yours to choose, so we didn’t put one on a screen."
+    },
+    {
+     "dt": "Your Taiwan paywall",
+     "dd": "Prices on the Chinese version are matched by rank from the Taiwan listing."
+    },
+    {
+     "dt": "After the purchase",
+     "dd": "The last screen is our sketch of where sign-up and reminders would go; we haven’t seen your post-purchase flow."
+    }
+   ]
+  }
+ ]
+}
+</script>
+
+<script>
+/* Life Reset hooks: the 66-day end date per language, the rating screen starts fresh, tap-and-hold to lock in. */
+(function(){
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function endDate(lang){
+    var d = new Date(); d.setDate(d.getDate() + 66);
+    return lang === 'zh' ? d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+                         : MON[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+  window.onSync = function(S){
+    var el = document.getElementById('lrDate'); if (el) el.textContent = endDate(S.lang);
+  };
+  window.onEnter = function(id, S){
+    if (id === 'rating') { S.view = HERO ? 'pot' : 'cur'; sync(); }
+    if (id === 'lockin') { var h = document.getElementById('lrHold'); if (h) h.classList.remove('hold'); }
+  };
+  var fp = document.getElementById('lrHold'), t = null;
+  function release(){ clearTimeout(t); t = null; fp.classList.remove('hold'); }
+  if (fp) {
+    fp.addEventListener('pointerdown', function(e){
+      e.preventDefault(); fp.classList.add('hold');
+      t = setTimeout(function(){ t = null; go('plan'); setTimeout(function(){ fp.classList.remove('hold'); }, 400); }, 850);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function(ev){ fp.addEventListener(ev, function(){ if (t) release(); }); });
+    fp.addEventListener('click', function(e){ if (e.detail === 0) go('plan'); });   /* keyboard / scripted activation */
+    fp.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+  }
+})();
+</script>
+<script>
+/* ============ engine — generic, do not fork per app ============ */
+var C = JSON.parse(document.getElementById('content').textContent);
+var S = C.state, scr = {}, ORDER = [], hist = [], cur = null, Q = location.search;
+var SHOT = /[?&](shot|phone|tour)\b/.test(Q), HERO = /[?&]hero\b/.test(Q);
+/* a screen with data-aside (e.g. the paywall TODAY for the side-by-side) renders for stills but is not part of the flow */
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id] = s; if (!s.hasAttribute('data-aside')) ORDER.push(s.dataset.id); });
+if (/[?&]shot\b/.test(Q)) document.documentElement.classList.add('shot');
+if (/[?&]phone\b/.test(Q)) document.documentElement.classList.add('shot', 'phoneonly');
+if (/[?&]clear\b/.test(Q)) document.documentElement.classList.add('clear');
+var IDEAS = (C.ideas || []).length;
+
+/* ---- languages: markup is the first language; C.i18n[lang][data-t key] the others; {tokens} from C.prices[lang] ---- */
+var LANGS = C.langs || [], BASE = LANGS.length ? LANGS[0].code : 'en', LANG_DONE = BASE, BASE_LABELS = JSON.parse(JSON.stringify(C.labels || {}));
+if (!S.lang) S.lang = BASE;
+function fillP(s, l){ var P = (C.prices || {})[l] || {}; return String(s).replace(/\{(\w+)\}/g, function(m, k){ return k in P ? P[k] : m; }); }
+function applyLang(){
+  var l = S.lang || BASE; if (l === LANG_DONE) return;
+  var T = (C.i18n || {})[l] || {};
+  document.querySelectorAll('.phone [data-t]').forEach(function(el){
+    if (el._base == null) el._base = el.innerHTML;
+    el.innerHTML = l === BASE || T[el.dataset.t] == null ? el._base : fillP(T[el.dataset.t], l);
+  });
+  C.labels = JSON.parse(JSON.stringify(BASE_LABELS));
+  var LL = (C.labelsI18n || {})[l] || {}; Object.keys(LL).forEach(function(k){ C.labels[k] = LL[k]; });
+  LANG_DONE = l;
+}
+function setLang(l){
+  if (!LANGS.some(function(x){ return x.code === l; })) return;
+  S.lang = l; sync();
+  document.querySelectorAll('[data-setlang]').forEach(function(b){ b.classList.toggle('on', b.dataset.setlang === l); });
+  if (window.onLang) window.onLang(l);
+}
+
+function lab(key){ var v = S[key]; var L = C.labels[key]; if (Array.isArray(v)) return v.map(function(x){ return L && L[x] || x; }).join(', '); return (L && L[v]) || v; }
+function sync(){
+  applyLang();
+  document.querySelectorAll('[data-bind]').forEach(function(el){
+    var b = el.dataset.bind, m = b.split(':');
+    el.textContent = m[0] === 'label' ? lab(m[1]) : m[0] === 'count' ? (S[m[1]] || []).length : (S[b] == null ? '' : S[b]);
+  });
+  document.querySelectorAll('[data-pick]').forEach(function(el){ var p = el.dataset.pick.split(':'); el.classList.toggle('on', S[p[0]] === p[1]); });
+  document.querySelectorAll('[data-toggle]').forEach(function(el){ var p = el.dataset.toggle.split(':'); el.classList.toggle('on', (S[p[0]] || []).indexOf(p[1]) > -1); });
+  document.querySelectorAll('[data-requires]').forEach(function(el){ el.disabled = !(S[el.dataset.requires] || []).length; });
+  document.querySelectorAll('[data-show]').forEach(function(el){ var p = el.dataset.show.split(':'); el.style.display = String(S[p[0]]) === p[1] ? '' : 'none'; });
+  if (window.onSync) window.onSync(S);
+}
+function show(id, dir){
+  var from = scr[cur], to = scr[id]; if (!to || id === cur) return;
+  var sheet = to.classList.contains('sheet');
+  if (from){
+    from.classList.remove('is-active');
+    if (sheet) from.classList.add('under');                                   /* a sheet slides up over the screen that opened it */
+    else if (dir === 'fwd' && !from.classList.contains('sheet')) from.classList.add('is-past');
+  }
+  if (!sheet) Object.keys(scr).forEach(function(k){ var u = scr[k]; if (u !== to && u.classList.contains('under')) { u.classList.remove('under'); if (dir === 'fwd') u.classList.add('is-past'); } });
+  to.classList.remove('is-past', 'under'); to.classList.add('is-active'); cur = id;
+  paint(); if (window.onEnter) window.onEnter(id, S);
+}
+function go(id){ if (cur) hist.push(cur); show(id, 'fwd'); }
+function back(){ if (hist.length) { var p = hist.pop(); scr[cur].classList.remove('is-active'); show(p, 'back'); } }
+function jump(id){
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active', 'is-past', 'under'); });
+  var i = ORDER.indexOf(id); hist = ORDER.slice(0, i < 0 ? 0 : i); cur = null;
+  ORDER.slice(0, i).forEach(function(k){ if (!scr[k].classList.contains('sheet')) scr[k].classList.add('is-past'); });
+  if (scr[id] && scr[id].classList.contains('sheet')) {                        /* jumping to a sheet: its opener stays visible under it */
+    for (var j = i - 1; j >= 0; j--) if (!scr[ORDER[j]].classList.contains('sheet')) { scr[ORDER[j]].classList.remove('is-past'); scr[ORDER[j]].classList.add('under'); break; }
+  }
+  show(id, 'jump');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+}
+function stepBy(d){ var i = ORDER.indexOf(cur) + d; if (i >= 0 && i < ORDER.length) jump(ORDER[i]); }
+function jumpTo(id){
+  var p = document.getElementById('prototype');
+  if (p && !document.documentElement.classList.contains('appmode')) p.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  jump(id);
+}
+function paint(){
+  sync();
+  var c = document.getElementById('chips');
+  if (!c.childElementCount) ORDER.forEach(function(id){
+    var p = C.panel[id] || {}, b = document.createElement('button');
+    b.className = 'au-chip'; b.type = 'button'; b.dataset.id = id; b.setAttribute('role', 'tab');
+    b.innerHTML = (p.idea ? '<i>' + p.idea + '</i>' : '') + ((C.chips && C.chips[id]) || id);
+    b.onclick = function(){ jump(id); };
+    c.appendChild(b);
+  });
+  c.querySelectorAll('.au-chip').forEach(function(b){ var on = b.dataset.id === cur; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  var d = C.panel[cur] || {t: cur, why: ''}, n = ORDER.indexOf(cur) + 1;
+  document.getElementById('panel').innerHTML =
+    (d.idea ? '<div class="au-pn-k"><i></i>Idea ' + d.idea + ' of ' + IDEAS + '</div>' : '<div class="au-pn-k au-ctx"><i></i>Context</div>') +
+    '<h3 class="au-pn-t">' + d.t + '</h3><p class="au-pn-h">' + d.why + '</p>' +
+    (d.iv ? '<div class="au-pn-o"><div class="au-lab">Potential outcome · based on Adapty data</div><div class="au-val"><mark>' + d.iv + '</mark></div><div class="au-sub">' + (d.il || '') + '</div></div>' : '') +
+    (d.also ? '<p class="au-pn-a">' + d.also + '</p>' : '') +
+    '<div class="au-pn-nav"><button type="button" onclick="stepBy(-1)"' + (n <= 1 ? ' disabled' : '') + '>‹ Previous</button><span>Screen ' + n + ' of ' + ORDER.length + '</span><button type="button" onclick="stepBy(1)"' + (n === ORDER.length ? ' disabled' : '') + '>Next ›</button></div>';
+  var ab = document.getElementById('abT'); if (ab) ab.textContent = (d.idea ? 'Idea ' + d.idea + ' of ' + IDEAS + ' · ' : '') + (d.t || '');
+}
+document.addEventListener('click', function(e){
+  var j = e.target.closest('[data-jumpto]'); if (j){ e.preventDefault(); jumpTo(j.dataset.jumpto); return; }
+  var L = e.target.closest('[data-setlang]'); if (L){ setLang(L.dataset.setlang); return; }
+  if (e.target.closest('[data-langtoggle]') && LANGS.length > 1){ var k = LANGS.findIndex(function(x){ return x.code === S.lang; }); setLang(LANGS[(k + 1) % LANGS.length].code); return; }
+  var el = e.target.closest('[data-go],[data-back],[data-pick],[data-toggle]'); if (!el) return;
+  if (el.dataset.pick){ var p = el.dataset.pick.split(':'); S[p[0]] = p[1]; sync(); if (el.dataset.advance) setTimeout(function(){ go(el.dataset.advance); }, 170); return; }
+  if (el.dataset.toggle){ var q = el.dataset.toggle.split(':'), a = S[q[0]] = S[q[0]] || [], i = a.indexOf(q[1]); if (i > -1) a.splice(i, 1); else a.push(q[1]); sync(); return; }
+  if ('back' in el.dataset) return back();
+  go(el.dataset.go);
+});
+document.querySelectorAll('[data-input]').forEach(function(inp){
+  inp.value = S[inp.dataset.input] || ''; inp.addEventListener('input', function(){ S[inp.dataset.input] = inp.value.trim() || 'there'; sync(); });
+});
+function $(id){ return document.getElementById(id); }
+
+/* hero stills, shortlist, outcome, sources — from CONTENT */
+$('heroPhones').innerHTML = (C.hero || []).map(function(id, i){
+  var pos = ['l', 'c', 'r'][i] || 'r', t = (C.chips && C.chips[id]) || id;
+  return '<button class="au-hp au-' + pos + '" data-jumpto="' + id + '" aria-label="Open ' + t + '"><img src="assets/hero/' + id + '.png" alt=""></button>';
+}).join('');
+$('ideaList').innerHTML = (C.ideas || []).map(function(r, i){
+  return '<article class="au-idea"><div class="au-num">0' + (i + 1) + '</div><div><h3>' + r.title + '</h3><p>' + r.what + '</p>' +
+    '<button type="button" class="au-lnk" data-jumpto="' + r.screen + '">See it on the screen</button></div>' +
+    '<div class="au-imp"><div class="au-v"><mark>' + r.impact + '</mark></div><div class="au-l">' + r.il + '</div></div></article>';
+}).join('');
+var O = C.outcome || {};
+$('bandNums').innerHTML =
+  (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') +
+  (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '');
+$('bandFn').textContent = C.grounding;
+$('fine').textContent = C.grounding + ' Prepared by Adapty.';
+$('srcBody').innerHTML = C.sources.map(function(g){
+  return '<div><h4>' + g.group + '</h4><dl>' + g.items.map(function(it){ return '<dt>' + it.dt + '</dt><dd>' + it.dd + '</dd>'; }).join('') + '</dl></div>';
+}).join('');
+function openSrc(){ var d = $('srcDetails'); d.open = true; d.scrollIntoView({block: 'start'}); }
+
+/* ---- extras: language control, the paywall side by side, QR / phone view, the video ---- */
+if (LANGS.length > 1) {
+  $('langRow').hidden = false;
+  var lb = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.name + '</button>'; }).join('');
+  $('langSw').innerHTML = lb;
+  $('abLang').innerHTML = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.code.toUpperCase() + '</button>'; }).join('');
+}
+var CM = C.compare;
+if (CM && scr[CM.today] && scr[CM.proposed]) {
+  $('compare').hidden = false; $('navCompare').hidden = false;
+  $('cmpBody').innerHTML = '<div class="au-ideas-h"><p class="au-kicker">' + (CM.kicker || 'The paywall, side by side') + '</p><h2 class="au-h2">' + (CM.title || 'Today and proposed.') + (CM.sub ? ' <span>' + CM.sub + '</span>' : '') + '</h2></div>' +
+    '<div class="au-cmp"><figure><img src="assets/hero/' + CM.today + '.png" alt="Your paywall today"><figcaption>Today <span>· ' + (CM.todayCap || 'rebuilt from your recording') + '</span></figcaption></figure>' +
+    '<ol class="au-chg">' + (CM.rows || []).map(function(r){
+      return '<li><h4>' + r.h + (r.idea ? ' <i>Idea ' + r.idea + '</i>' : '') + '</h4><span class="au-was"><em>Today</em>' + r.was + '</span><span class="au-now"><em>Proposed</em>' + r.now + '</span></li>';
+    }).join('') + '</ol>' +
+    '<figure><button type="button" class="au-cmp-go" data-jumpto="' + CM.proposed + '" aria-label="Open the proposed paywall"><img src="assets/hero/' + CM.proposed + '.png" alt="The proposed paywall"></button><figcaption>Proposed <span>· tap to try it</span></figcaption></figure></div>' +
+    (CM.kept ? '<p class="au-kept">' + CM.kept + '</p>' : '');
+}
+if (C.liveUrl) { $('qrCard').hidden = false; $('qrMob').hidden = false; }
+if (/[?&]app\b/.test(Q)) {
+  var H0 = document.documentElement; H0.classList.add('appmode');
+  var openP = function(o){ H0.classList.toggle('au-open', o); $('abWhy').querySelector('em').textContent = o ? 'Close ↓' : 'Why ↑'; };
+  $('abWhy').onclick = function(){ openP(!H0.classList.contains('au-open')); };
+  $('abScrim').onclick = function(){ openP(false); };
+}
+if (C.video) {
+  var dlg = $('vid'), vel = $('vidEl'); vel.src = C.video; if (C.poster) vel.poster = C.poster; $('vidDl').href = C.video;
+  $('heroVideo').hidden = false;
+  $('heroVideo').onclick = function(){ dlg.showModal(); vel.play().catch(function(){}); };
+  $('vidX').onclick = function(){ dlg.close(); };
+  dlg.addEventListener('close', function(){ vel.pause(); });
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+}
+
+/* ---- ?tour: a deterministic walkthrough from C.tour — tourAt(ms) paints one frame; record-video.sh records it ---- */
+function tourInit(){
+  var T = C.tour, H = document.documentElement, TR = T.transition || 360;
+  H.classList.add('tourmode', 'shot'); document.body.classList.add('nofx');
+  var SEG = T.segments, START = [], STATE = [], UNDER = [], acc = 0, st = JSON.parse(JSON.stringify(C.state));
+  SEG.forEach(function(s, i){
+    START.push(acc); acc += s.d;
+    Object.keys(s.st || {}).forEach(function(k){ st[k] = s.st[k]; }); STATE.push(JSON.parse(JSON.stringify(st)));
+    var u = null; if (scr[s.id].classList.contains('sheet')) for (var j = i - 1; j >= 0; j--) if (!scr[SEG[j].id].classList.contains('sheet')) { u = SEG[j].id; break; }
+    UNDER.push(u);
+  });
+  var TOTAL = acc, capEl = $('tCap'), tap = $('tTap'), pressed = null, popped = [];
+  $('tIntro').innerHTML = '<p class="au-eyebrow"><i></i>' + document.querySelector('.au-top-hero .au-eyebrow').textContent + '</p><h1 class="au-display">' + C.app + '</h1>' +
+    '<p class="au-lede">' + (T.introLede || document.querySelector('.au-top-hero .au-lede').innerHTML) + '</p>';
+  $('tEnd').innerHTML = '<p class="au-eyebrow"><i></i>Growth Audit · ' + C.app + '</p><h2 class="au-te-h">' + (T.endTitle || 'Five ideas, built into your own onboarding.') + '</h2>' +
+    '<div class="au-te-n">' + (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') + (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '') + '</div>' +
+    (C.liveUrl ? '<div class="au-te-q"><img src="assets/qr-app.png" alt=""><div><b>Try it on your phone</b><span>' + C.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') + '</span></div></div>' : '') +
+    '<p class="au-te-f">' + C.grounding + '</p>';
+  function ease(x){ return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function easeBack(x){ var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
+  function capHTML(c){
+    c = c || {k: '', t: '', l: ''};
+    return '<div class="au-tk' + (c.n ? '' : ' au-ctx') + '"><i></i>' + (c.n ? 'Idea ' + c.n + ' of ' + IDEAS : (c.k || 'Context')) + '</div><h2 class="au-tt">' + c.t + '</h2><p class="au-tl">' + (c.l || '') + '</p>' +
+      (c.o ? '<div class="au-to"><small>Potential outcome · based on Adapty data</small><b><mark>' + c.o + '</mark></b><span>' + (c.ol || '') + '</span></div>' : '');
+  }
+  function place(id, tf, z){ scr[id].style.transform = tf; scr[id].style.zIndex = z; }
+  window.TOUR_MS = TOTAL;
+  window.tourAt = function(ms){
+    ms = Math.max(0, Math.min(TOTAL - 1, ms));
+    var i = 0; while (i < SEG.length - 1 && ms >= START[i + 1]) i++;
+    var s = SEG[i], local = ms - START[i], prev = i > 0 ? SEG[i - 1] : null;
+    Object.keys(STATE[i]).forEach(function(k){ S[k] = STATE[i][k]; }); sync();
+    var moving = prev && prev.id !== s.id && local < TR, p = moving ? ease(local / TR) : 1;
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('is-active', 'is-past', 'under'); place(k, 'translateX(100%)', 0); });
+    var B = scr[s.id];
+    if (moving) {
+      if (B.classList.contains('sheet')) { place(prev.id, 'none', 1); B.style.transform = 'translateY(' + (1 - p) * 100 + '%)'; }
+      else {
+        var slide = 'translateX(' + (-28 * p) + '%)'; place(prev.id, slide, 1); B.style.transform = 'translateX(' + (1 - p) * 100 + '%)';
+        if (UNDER[i - 1]) place(UNDER[i - 1], slide, 0);
+      }
+    } else B.style.transform = 'none';
+    B.style.zIndex = 2;
+    if (UNDER[i] && !moving) place(UNDER[i], 'none', 1);
+    /* optional reveal: s.pop scales an element in, s.reveal fades one in a beat later */
+    popped.forEach(function(e){ e.style.transform = ''; e.style.opacity = ''; }); popped = [];
+    var q = Math.max(0, Math.min(1, (local - 250) / 550));
+    if (s.pop) { var pe = B.querySelector(s.pop); if (pe) { pe.style.transform = 'scale(' + (.55 + .45 * easeBack(q)) + ')'; pe.style.opacity = Math.min(1, q * 1.6); popped.push(pe); } }
+    if (s.reveal) { var re = B.querySelector(s.reveal); if (re) { re.style.opacity = Math.max(0, Math.min(1, (local - 520) / 300)); popped.push(re); } }
+    /* caption crossfades at screen changes; waits for the intro, gives way to the end card */
+    var key = s.id, op = 1;
+    if (moving) { if (p < .5) { key = prev.id; op = 1 - p * 2; } else op = p * 2 - 1; }
+    if (capEl.dataset.k !== key) { capEl.innerHTML = capHTML(T.captions[key]); capEl.dataset.k = key; }
+    var io = ms < 1100 ? 1 : Math.max(0, 1 - (ms - 1100) / 300), eo = s.end ? Math.min(1, local / 350) : 0;
+    capEl.style.opacity = op * Math.max(0, Math.min(1, (ms - 1400) / 300)) * (1 - eo);
+    /* the finger: fades in, taps, ripples out. Selectors are scoped to the screen */
+    tap.style.opacity = 0; if (pressed) { pressed.style.opacity = ''; pressed = null; }
+    if (s.tap) {
+      var el = B.querySelector(s.tap[0]), dt = local - s.tap[1];
+      if (el && dt > -260 && dt < 420) {
+        var r = el.getBoundingClientRect();
+        tap.style.left = (r.left + r.width / 2) + 'px'; tap.style.top = (r.top + r.height / 2) + 'px';
+        if (dt < 0) { tap.style.opacity = (dt + 260) / 260 * .9; tap.style.transform = 'scale(1)'; }
+        else { tap.style.opacity = .9 * (1 - dt / 420); tap.style.transform = 'scale(' + (1 + dt / 420 * .9) + ')'; }
+        if (dt >= 0 && dt < 160) { el.style.opacity = .72; pressed = el; }
+      }
+    }
+    $('tIntro').style.opacity = T.intro === false ? 0 : io;
+    $('tEnd').style.opacity = eo;
+    $('tProg').style.width = (ms / TOTAL * 100) + '%';
+    cur = s.id;
+    return i;
+  };
+  var tm = /[?&]t=(\d+)/.exec(Q); tourAt(tm ? +tm[1] : 0);
+}
+
+/* boot: #<screen-id> deep-links a screen (shoot.sh / hero-stills.sh use it); ?lang=xx picks the language */
+(function(){
+  var lm = /[?&]lang=(\w+)/.exec(Q); if (lm) setLang(lm[1]); else setLang(S.lang);
+  var h = location.hash.slice(1);
+  jump(scr[h] ? h : ORDER[0]);
+  if (scr[h] && !SHOT && !document.documentElement.classList.contains('appmode')) setTimeout(function(){ $('prototype').scrollIntoView(); }, 0);
+  if (/[?&]tour\b/.test(Q) && C.tour) tourInit();
+})();
+</script>
+</body>
+</html>
